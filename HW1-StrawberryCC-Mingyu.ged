@@ -1,0 +1,161 @@
+0 NOTE Mingyu Yao
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE My Family
+1 DATE 9 SEP 2019
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME Stawberry Cheesecake
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Stawberry /Cheesecake/
+2 GIVN Stawberry
+2 SURN Cheesecake
+2 _MARNM Cheesecake
+1 SEX F
+1 BIRT
+2 DATE 6 NOV 2010
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME Grapefruit /Cheesecake/
+2 GIVN Grapefruit
+2 SURN Cheesecake
+2 _MARNM Cheesecake
+1 SEX M
+1 BIRT
+2 DATE 10 MAR 2001
+1 FAMS @F1@
+1 FAMC @F2@
+0 @I3@ INDI
+1 NAME Raspberry /Pie/
+2 GIVN Raspberry
+2 SURN Pie
+2 _MARNM Cheesecake
+1 SEX F
+1 BIRT
+2 DATE 7 APR 2003
+1 FAMS @F1@
+1 FAMS @F3@
+1 FAMC @F4@
+0 @I4@ INDI
+1 NAME Banana /Brownie/
+2 GIVN Banana
+2 SURN Brownie
+2 _MARNM Brownie
+1 SEX M
+1 BIRT
+2 DATE 5 AUG 1997
+1 FAMS @F3@
+1 FAMC @F5@
+0 @I5@ INDI
+1 NAME Durian /Brownie/
+2 GIVN Durian
+2 SURN Brownie
+2 _MARNM Brownie
+1 SEX M
+1 BIRT
+2 DATE 7 SEP 1982
+1 DEAT Y
+2 DATE 4 DEC 2017
+1 FAMS @F5@
+0 @I6@ INDI
+1 NAME Chocolate /Brownie/
+2 GIVN Chocolate
+2 SURN Brownie
+2 _MARNM Brownie
+1 SEX F
+1 BIRT
+2 DATE 5 AUG 1987
+1 FAMS @F5@
+0 @I7@ INDI
+1 NAME Almond /Cheesecake/
+2 GIVN Almond
+2 SURN Cheesecake
+2 _MARNM Cheesecake
+1 SEX M
+1 BIRT
+2 DATE 5 AUG 2013
+1 FAMC @F1@
+0 @I8@ INDI
+1 NAME Cranberry /Brownie/
+2 GIVN Cranberry
+2 SURN Brownie
+2 _MARNM Brownie
+1 SEX M
+1 BIRT
+2 DATE 3 MAR 2009
+1 FAMC @F3@
+0 @I9@ INDI
+1 NAME Cinammon /Pie/
+2 GIVN Cinammon
+2 SURN Pie
+2 _MARNM Pie
+1 SEX M
+1 BIRT
+2 DATE 4 JUN 1987
+1 FAMS @F4@
+0 @I10@ INDI
+1 NAME Apple /Pie/
+2 GIVN Apple
+2 SURN Pie
+2 _MARNM Pie
+1 SEX F
+1 BIRT
+2 DATE 3 JUN 1989
+1 FAMS @F4@
+0 @I11@ INDI
+1 NAME Pineapple /Cheesecake/
+2 GIVN Pineapple
+2 SURN Cheesecake
+2 _MARNM Cheesecake
+1 SEX M
+1 BIRT
+2 DATE 10 OCT 1990
+1 FAMS @F2@
+0 @I12@ INDI
+1 NAME Mongol /Cheesecake/
+2 GIVN Mongol
+2 SURN Cheesecake
+2 _MARNM Cheesecake
+1 SEX F
+1 BIRT
+2 DATE 3 JUL 1989
+1 FAMS @F2@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 CHIL @I7@
+1 MARR
+2 DATE 5 MAY 2008
+1 _CURRENT Y
+0 @F2@ FAM
+1 HUSB @I11@
+1 WIFE @I12@
+1 CHIL @I2@
+1 _CURRENT Y
+0 @F3@ FAM
+1 HUSB @I4@
+1 WIFE @I3@
+1 CHIL @I8@
+1 MARR
+2 DATE 6 JUN 2005
+1 DIV
+2 DATE 6 OCT 2007
+1 _CURRENT N
+0 @F4@ FAM
+1 HUSB @I9@
+1 WIFE @I10@
+1 CHIL @I3@
+1 _CURRENT Y
+0 @F5@ FAM
+1 HUSB @I5@
+1 WIFE @I6@
+1 CHIL @I4@
+1 _CURRENT Y
+0 TRLR
