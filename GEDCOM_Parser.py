@@ -1,4 +1,3 @@
-import json
 
 def validate_file(path):
     """Read the contains of file"""
@@ -100,7 +99,7 @@ def main():
     indi = {}
     validate_file(path)
     indi, fam = build_data_dict(path,indi,fam)
-    print("Individual Dictionary: {}".format(json.dumps(indi)))
+    print("Individual Dictionary: {}".format(indi))
     print("Family Dictionary: {}".format(fam))
 
 if __name__ == '__main__':
