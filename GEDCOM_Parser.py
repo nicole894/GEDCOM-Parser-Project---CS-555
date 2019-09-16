@@ -85,10 +85,10 @@ def build_data_dict(path, indi, fam):
         counter =0;
 
         for i in content_list:
-            if int(i[0]) == 0 and i[2] == 'INDI':
+            if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
                 data = create_data(counter,content_list)
                 indi.update({i[1]:data})
-            elif int(i[0]) == 0 and i[2] == 'FAM':
+            elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
                 data = create_data(counter, content_list)
                 fam.update({i[1]: data})
             counter = counter + 1;
@@ -101,7 +101,7 @@ def main():
     validate_file(path)
     indi, fam = build_data_dict(path,indi,fam)
     print("Individual Dictionary: {}".format(json.dumps(indi)))
-    #print("Family Dictionary: {}".format(fam))
+    print("Family Dictionary: {}".format(fam))
 
 if __name__ == '__main__':
     main()
