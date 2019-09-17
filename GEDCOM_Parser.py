@@ -1,3 +1,4 @@
+from PTutil import print_indi, print_fam
 
 def validate_file(path):
     """Read the contains of file"""
@@ -99,8 +100,10 @@ def main():
     indi = {}
     validate_file(path)
     indi, fam = build_data_dict(path,indi,fam)
-    print("Individual Dictionary: {}".format(indi))
-    print("Family Dictionary: {}".format(fam))
+    print("Individual Dictionary: ")
+    print_indi(indi)
+    print("Family Dictionary: ")
+    print_fam(fam, indi)
 
 if __name__ == '__main__':
     main()
