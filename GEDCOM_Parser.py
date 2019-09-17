@@ -159,6 +159,9 @@ def main():
     indi = {}
     validate_file(path)
     indi, fam = build_data_dict(path,indi,fam)
+    print("Individual Dictionary: {}" .format(indi))
+    print("Families Dictionary: {}" .format(fam))
+    
     print("Individuals")
     print_indi(indi)
     print("Families")
