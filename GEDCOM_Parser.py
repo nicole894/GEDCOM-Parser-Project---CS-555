@@ -1,7 +1,15 @@
 from prettytable import PrettyTable
 import time
+import unittest
+from datetime import datetime, date
+
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+
+
+def convert_str_date(date):
+    datetime_object = datetime.strptime(date, '%d %b %Y')
+    return datetime_object
 
 
 def validate_file(path):
@@ -66,7 +74,9 @@ def create_data(counter,content_list):
             data_dict.update({each_data[1]:each_data[2]})
         elif int(each_data[0]) == 1 and each_data[1] in spec_list :
              date_list = content_list[i+1]
-             date = date_list[2]
+             date = convert_str_date(date_list[2])
+             print(date)
+             print(type(date))
              data_dict.update({each_data[1]: date})
 
     return data_dict
@@ -154,7 +164,7 @@ def print_fam(fam_dict, indi_dict):
     print(x)
 
 def main():
-    path = "GEDCOM_File.ged"                                    
+    path = "GEDCOM_File.ged"
     fam = {}
     indi = {}
     validate_file(path)
@@ -166,6 +176,7 @@ def main():
     print_indi(indi)
     print("Families")
     print_fam(fam, indi)
+
 
 if __name__ == '__main__':
     main()
