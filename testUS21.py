@@ -7,12 +7,11 @@ class TestCorrectGender(unittest.TestCase):
         for hid in ids:
             with self.subTest(hid=hid):
                 self.assertEqual(indi[hid]['SEX'], 'M')
-
-    def test_wife_F(self):
         ids = sorted(list(set([fam[i]['WIFE'] for i in fam.keys()])))
         for wid in ids:
             with self.subTest(wid=wid):
                 self.assertEqual(indi[wid]['SEX'], 'F')
+
 
 if __name__ == '__main__':
     unittest.main(exit=False)
