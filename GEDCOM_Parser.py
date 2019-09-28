@@ -177,6 +177,7 @@ def main():
     path = "GEDCOM_File.ged"
     fam = {}
     indi = {}
+    log = []
     validate_file(path)
     indi, fam, log = build_data_dict(path,indi,fam, log)
     print("Individual Dictionary: {}" .format(indi))
