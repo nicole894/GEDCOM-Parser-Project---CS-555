@@ -6,10 +6,10 @@ from datetime import datetime, date
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
 log_func=\
-    {("US21","HUSB"): lambda hid: "FAMILY: US21: Husband (%s) has incorrect gender" % hid,
-     ("US21","WIFE"): lambda wid: "FAMILY: US21: Wife (%s) has incorrect gender" % wid,
-     ("US22","FAM"): lambda uid: "FAMILY: US22: Family (%s) already exists" % uid,
-     ("US22","INDI"): lambda uid: "INDIVIDUAL: US22: Individual (%s) already exists" % uid}
+    {("US21","HUSB"): lambda x: f"FAMILY: {x[0]}: US21: Husband ({x[1]}) has incorrect gender",
+     ("US21","WIFE"): lambda x: f"FAMILY: {x[0]}: US21: Wife ({x[1]}) has incorrect gender",
+     ("US22","FAM"): lambda x: f"FAMILY: {x}: US22: Family already exists",
+     ("US22","INDI"): lambda x: f"INDIVIDUAL: {x}: US22: Individual already exists"}
 
 def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
@@ -115,6 +115,12 @@ def build_data_dict(path, indi, fam, log):
                     log.append(["US22","FAM",i[1]])
                 else:
                     fam.update({i[1]: data})
+                    hid = fam[i[1]]['HUSB'] #Tag US21
+                    wid = fam[i[1]]['WIFE']
+                    if indi[hid]['SEX']!='M':
+                        log.append(["US21","HUSB",[i[1],hid]])
+                    if indi[wid]['SEX']!='F':
+                        log.append(["US21","WIFE",[i[1],wid]]) #End US21
             counter = counter + 1
         return indi, fam, log
 
