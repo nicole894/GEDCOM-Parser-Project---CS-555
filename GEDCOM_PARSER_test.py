@@ -6,9 +6,17 @@ from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_de
 
 class TestUserStories(unittest.TestCase):
 
-    print = Parser()
-    indi, fam = print.main()
-    print.print_dicts(indi,fam)
+    rint = Parser()
+    indi, fam, log = rint.main()
+    rint.print_dicts(indi,fam)
+    log_func={
+     ("US21","HUSB"): lambda x: f"FAMILY: {x[0]}: US21: Husband ({x[1]}) has incorrect gender",
+     ("US21","WIFE"): lambda x: f"FAMILY: {x[0]}: US21: Wife ({x[1]}) has incorrect gender",
+     ("US22","FAM"): lambda x: f"FAMILY: {x}: US22: Family already exists",
+     ("US22","INDI"): lambda x: f"INDIVIDUAL: {x}: US22: Individual already exists"
+     }
+    for x in log:
+        print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
 
     def test_US01(self):
         """Tests if the date from the dictionary is before today's date"""
@@ -45,14 +53,21 @@ class TestUserStories(unittest.TestCase):
 
 
     def test_US21(self):
-        ids = sorted(list(set([self.fam[i]['HUSB'] for i in self.fam.keys()])))
-        for hid in ids:
-            with self.subTest(hid=hid):
-                self.assertEqual(self.indi[hid]['SEX'], 'M')
-        ids = sorted(list(set([self.fam[i]['WIFE'] for i in self.fam.keys()])))
-        for wid in ids:
-            with self.subTest(wid=wid):
-                self.assertEqual(self.indi[wid]['SEX'], 'F')
+        self.assertEqual(len([i for i in self.log if i[0]=='US21']),1,"Should have exactly 1 errors for US21.")
+        #self.assertIn(['US21', 'HUSB', ['@F4@', '@I3@']], self.log, "Husband Test failed.")
+        self.assertIn(['US21', 'WIFE', ['@F4@', '@I4@']], self.log, "Wife Test failed.")
+        self.assertEqual(self.log_func['US21','HUSB'](['F1','I5']), \
+            "FAMILY: F1: US21: Husband (I5) has incorrect gender", "log printing test.")
+
+    def test_US22(self):
+        self.assertEqual(len([i for i in self.log if i[0]=='US22']),1,"Should have exactly 1 errors for US22.")
+        self.assertIn(['US22', 'INDI', '@I1@'], self.log, "Individual Test failed.")
+        #self.assertIn(['US22', 'FAM', '@F3@'], self.log, "Family Test failed.")
+        self.assertEqual(self.log_func['US22', 'INDI']('x'), "INDIVIDUAL: x: US22: Individual already exists")
+        ik=self.indi.keys()
+        fk=self.fam.keys()
+        self.assertEqual(len(ik),len(set(ik)))
+        self.assertEqual(len(fk),len(set(fk)))
 
     def test_US35(self):
         """List birthdays in last 30 days"""

@@ -8,16 +8,15 @@ from dateutil.parser import parse
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-
 class Parser():
 
     test_v ='This works'
     fam = {}
     indi = {}
-    
+    log = []
 
     def validate_file(self, path):
-        path = "C:/Users/aishw/Desktop/CS 600/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1 (2)/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1/GEDCOM_File.ged"
+        path = "GEDCOM_File.ged"
         print(path)
         """Read the contains of file"""
         valid_lines = 0
@@ -90,7 +89,7 @@ class Parser():
         return data_dict
 
 
-    def build_data_dict(self, path, indi, fam):
+    def build_data_dict(self, path, indi, fam, log):
         try:
             fp = open(path, 'r')
         except FileNotFoundError:
@@ -109,13 +108,19 @@ class Parser():
             for i in content_list:
                 if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
                     data = self.create_data(counter,content_list)
-                    indi.update({i[1]:data})
+                    if i[1] in indi.keys(): #Tag US22
+                        log.append(["US22","INDI",i[1]])
+                    else:
+                        indi.update({i[1]:data})
                 elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
                     data = self.create_data(counter, content_list)
-                    fam.update({i[1]: data})
+                    if i[1] in fam.keys(): #Tag US22
+                        log.append(["US22","FAM",i[1]])
+                    else:
+                        fam.update({i[1]: data})
                 counter = counter + 1
                 fp.close()
-            return indi, fam
+            return indi, fam, log
 
 
 
@@ -179,13 +184,22 @@ class Parser():
             children= v.get('CHIL','NA')
             x.add_row([uid,'-'.join(mar),(div=='NA') and 'NA' or '-'.join(div),hid,hname,wid,wname,children])
         print(x)
+    def US21_right_gender_for_role(self, indi, fam, log):
+        fam_ids=self.fam.keys()
+        for k in self.fam:
+            hid = self.fam[k]['HUSB'] #Tag US21
+            wid = self.fam[k]['WIFE']
+            if self.indi[hid]['SEX']!='M':
+                self.log.append(["US21","HUSB",[k,hid]])
+            if self.indi[wid]['SEX']!='F':
+                self.log.append(["US21","WIFE",[k,wid]]) #End US21
 
     def main(self):
-        path = "C:/Users/aishw/Desktop/CS 600/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1 (2)/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1/GEDCOM_File.ged"
+        path = "GEDCOM_File.ged"
         self.validate_file(path)
-        indi, fam = self.build_data_dict(path,self.indi,self.fam)
-
-        return  indi,fam
+        self.indi,self.fam, self.log = self.build_data_dict(path,self.indi,self.fam, self.log)
+        self.US21_right_gender_for_role(self.indi,self.fam, self.log)
+        return  self.indi,self.fam, self.log
 
     def print_dicts(self,indi, fam):
         print("Individual Dictionary: {}" .format(indi))
