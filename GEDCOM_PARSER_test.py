@@ -2,7 +2,6 @@ import unittest
 import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
-from dateutil.parser import parse
 from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_death,birth_inlast_30days,death_inlast_30days,reject_illegitimate_dates
 
 class TestUserStories(unittest.TestCase):
@@ -15,11 +14,12 @@ class TestUserStories(unittest.TestCase):
         """Tests if the date from the dictionary is before today's date"""
 
         for id, records in self.indi.items():
-            with self.subTest(id=id):
+            with self.subTest(id=id): 
                 birth_date1 = records.get('BIRT')
                 death_date1 = records.get('DEAT')
 
-                self.assertTrue(check_before_today(birth_date1))
+                if birth_date1 is not None:
+                    self.assertTrue(check_before_today(birth_date1))
                 if death_date1 is not None:
                     self.assertTrue(check_before_today(death_date1))
 
@@ -28,7 +28,8 @@ class TestUserStories(unittest.TestCase):
                 marr_date1 = records.get('MARR')
                 div_date1 = records.get('DIV')
 
-                self.assertTrue(check_before_today(marr_date1))
+                if marr_date1 is not None:
+                    self.assertTrue(check_before_today(marr_date1))
                 if div_date1 is not None:
                     self.assertTrue(check_before_today(div_date1))
 
@@ -60,9 +61,10 @@ class TestUserStories(unittest.TestCase):
             with self.subTest(id=id):
                 birth = record.get('BIRT')
                 name = record.get('NAME')
-                check_birth = birth_inlast_30days(birth)
-                if check_birth is True:
-                    x.add_row([id,name,birth])
+                if birth is not None:
+                    check_birth = birth_inlast_30days(birth)
+                    if check_birth is True:
+                        x.add_row([id,name,birth])
         print(x)       
                     
 
@@ -81,21 +83,24 @@ class TestUserStories(unittest.TestCase):
     def test_US42(self):
         "Tests if the illegitimate dates are rejected"
 
-
         for id, records in self.indi.items():
             with self.subTest(id=id):
                 birth_date1 = records.get('BIRT')
                 death_date1 = records.get('DEAT')
-                self.assertTrue(reject_illegitimate_dates(birth_date1))
+                name = records.get('NAME')
+                if birth_date1 is not None:
+                    self.assertTrue(reject_illegitimate_dates(birth_date1))
                 if death_date1 is not None:
                     self.assertTrue(reject_illegitimate_dates(death_date1))
+
 
         for id, records in self.fam.items():
             with self.subTest(id=id):
                 marr_date1 = records.get('MARR')
                 div_date1 = records.get('DIV')
 
-                self.assertTrue(reject_illegitimate_dates(marr_date1))
+                if marr_date1 is not None:
+                    self.assertTrue(reject_illegitimate_dates(marr_date1))
                 if div_date1 is not None:
                     self.assertTrue(reject_illegitimate_dates(div_date1))
 
