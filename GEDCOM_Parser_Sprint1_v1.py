@@ -197,6 +197,19 @@ def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
+def check_before_today(date):
+
+    """Checks if the date is before today"""
+
+    date1= convert_str_date(date)
+    date2 = date1.date()
+
+    today = datetime.today()
+  
+    if date2 > today.date():
+        return False
+    else:
+        return True
 
 
 def birth_before_death(birth, death):
@@ -244,6 +257,27 @@ class TestUserStories(unittest.TestCase):
     print = Parser()
     indi, fam = print.main()
     print.print_dicts(indi,fam)
+
+    def test_US01(self):
+        """Tests if the date from the dictionary is before today's date"""
+
+        for id, records in self.indi.items():
+            with self.subTest(id=id):
+                birth_date1 = records.get('BIRT')
+                death_date1 = records.get('DEAT')
+
+                self.assertTrue(check_before_today(birth_date1))
+                if death_date1 is not None:
+                    self.assertTrue(check_before_today(death_date1))
+
+        for id, records in self.fam.items():
+            with self.subTest(id=id):
+                marr_date1 = records.get('MARR')
+                div_date1 = records.get('DIV')
+
+                self.assertTrue(check_before_today(marr_date1))
+                if div_date1 is not None:
+                    self.assertTrue(check_before_today(div_date1))
 
     def test_US02(self):
         user_story = inspect.stack()[0][3].replace('test_','')
