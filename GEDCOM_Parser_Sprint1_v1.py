@@ -197,6 +197,12 @@ def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
+def reject_illegitimate_dates(dates):
+    "Rejects illegitimate dates"
+ 
+    reject = parse(dates)
+    return reject
+
 def check_before_today(date):
 
     """Checks if the date is before today"""
