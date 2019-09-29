@@ -14,8 +14,10 @@ class Parser():
     test_v ='This works'
     fam = {}
     indi = {}
+    
 
     def validate_file(self, path):
+        path = "C:/Users/aishw/Desktop/CS 600/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1 (2)/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1/GEDCOM_File.ged"
         print(path)
         """Read the contains of file"""
         valid_lines = 0
@@ -80,7 +82,10 @@ class Parser():
             elif int(each_data[0]) == 1 and each_data[1] in spec_list :
                  date_list = content_list[i+1]
                  date = date_list[2]
-                 data_dict.update({each_data[1]: date})
+                 test_date = reject_illegitimate_dates(date)
+                 #print(test_date)
+                 if test_date == "False":
+                    data_dict.update({each_data[1]: date})
 
         return data_dict
 
@@ -134,12 +139,17 @@ class Parser():
             uid=k
             name=v.get('NAME')
             sex=v.get('SEX')
-            DOB= self.date_format(v.get('BIRT').split(' '))
+            DOB= v.get('BIRT', 'NA')
+            born = (DOB!='NA')
+            if born:
+                DOB = self.date_format(DOB.split(' '))
             DOD=v.get('DEAT','NA')
             alive=(DOD=='NA')
             if not alive:
                 DOD = self.date_format(DOD.split(' '))
-            if alive:
+            if not born:
+                age='NA'
+            elif alive:
                 age = int(today[0]) - int(DOB[0]) - self.age_carry(today,DOB)
             else:
                 age = int(DOD[0]) - int(DOB[0]) - self.age_carry(DOD,DOB)
@@ -155,7 +165,10 @@ class Parser():
         x=PrettyTable(["ID","Married","Divorced","Husband ID","Husband Name","Wife ID","Wife Name","Children"])
         for k,v in fam_dict.items():
             uid=k
-            mar=self.date_format(v.get('MARR').split(' '))
+            mar= v.get('MARR', 'NA')
+            married = (mar!='NA')
+            if married:
+                mar = self.date_format(mar.split(' '))
             div=v.get('DIV', 'NA')
             if div!='NA':
                 div=self.date_format(div.split(' '))
@@ -168,7 +181,7 @@ class Parser():
         print(x)
 
     def main(self):
-        path = "C:\Windows\System32\SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1\GEDCOM_File.ged"
+        path = "C:/Users/aishw/Desktop/CS 600/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1 (2)/SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1/GEDCOM_File.ged"
         self.validate_file(path)
         indi, fam = self.build_data_dict(path,self.indi,self.fam)
 
@@ -200,9 +213,13 @@ def convert_str_date(date):
 
 def reject_illegitimate_dates(dates):
     "Rejects illegitimate dates"
- 
-    reject = parse(dates)
-    return reject
+    #print("In REJECT FUN")
+    return_flag = 'False'
+    try:
+        parse(dates)
+    except ValueError:
+        return_flag = 'True'
+    return return_flag
 
 def check_before_today(date):
 
