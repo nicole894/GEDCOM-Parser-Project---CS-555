@@ -3,7 +3,7 @@ import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
 from dateutil.parser import parse
-from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_death,birth_inlast_30days,death_inlast_30days
+from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_death,birth_inlast_30days,death_inlast_30days,reject_illegitimate_dates
 
 class TestUserStories(unittest.TestCase):
 
@@ -78,7 +78,7 @@ class TestUserStories(unittest.TestCase):
                     x.add_row([id,name,death])
         print(x)
         
-     def test_US42(self):
+    def test_US42(self):
         "Tests if the illegitimate dates are rejected"
 
 
