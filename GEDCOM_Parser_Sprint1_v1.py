@@ -4,7 +4,6 @@ import unittest
 from datetime import datetime, timedelta
 from datetime import date
 import inspect
-from dateutil.parser import parse
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -168,7 +167,7 @@ class Parser():
         print(x)
 
     def main(self):
-        path = "GEDCOM_File.ged"
+        path = "C:\Windows\System32\SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1\GEDCOM_File.ged"
         self.validate_file(path)
         indi, fam = self.build_data_dict(path,self.indi,self.fam)
 
@@ -197,12 +196,6 @@ def log_fault(story, id, message, indi, fam):
 def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
-
-def reject_illegitimate_dates(dates):
-    "Rejects illegitimate dates"
- 
-    reject = parse(dates)
-    return reject
 
 def check_before_today(date):
 
@@ -248,7 +241,6 @@ def birth_inlast_30days(birth):
 
 def death_inlast_30days(death):
     """Calculate death in last 30 days"""
-
     if death is None:
         return False
     else:
@@ -263,94 +255,4 @@ def death_inlast_30days(death):
             return False
 
 
-class TestUserStories(unittest.TestCase):
 
-    print = Parser()
-    indi, fam = print.main()
-    print.print_dicts(indi,fam)
-
-    def test_US01(self):
-        """Tests if the date from the dictionary is before today's date"""
-
-        for id, records in self.indi.items():
-            with self.subTest(id=id):
-                birth_date1 = records.get('BIRT')
-                death_date1 = records.get('DEAT')
-
-                self.assertTrue(check_before_today(birth_date1))
-                if death_date1 is not None:
-                    self.assertTrue(check_before_today(death_date1))
-
-        for id, records in self.fam.items():
-            with self.subTest(id=id):
-                marr_date1 = records.get('MARR')
-                div_date1 = records.get('DIV')
-
-                self.assertTrue(check_before_today(marr_date1))
-                if div_date1 is not None:
-                    self.assertTrue(check_before_today(div_date1))
-
-    def test_US02(self):
-        user_story = inspect.stack()[0][3].replace('test_','')
-        #state = []
-        for id, record in self.indi.items():
-            with self.subTest(id=id):
-                birth = record.get('BIRT')
-                death = record.get('DEAT')
-                out = birth_before_death(birth, death)
-                self.assertTrue(out)
-
-
-    def test_US21(self):
-        ids = sorted(list(set([self.fam[i]['HUSB'] for i in self.fam.keys()])))
-        for hid in ids:
-            with self.subTest(hid=hid):
-                self.assertEqual(self.indi[hid]['SEX'], 'M')
-        ids = sorted(list(set([self.fam[i]['WIFE'] for i in self.fam.keys()])))
-        for wid in ids:
-            with self.subTest(wid=wid):
-                self.assertEqual(self.indi[wid]['SEX'], 'F')
-
-    def test_US35(self):
-        """List birthdays in last 30 days"""
-        for id, record in self.indi.items():
-            with self.subTest(id=id):
-                birth = record.get('BIRT')
-                check_birth = birth_inlast_30days(birth)
-                if check_birth is True:
-                    print("birthday in last 30 days {}".format(birth))
-
-    def test_US36(self):
-        """List death date in last 30 days"""
-        for id, record in self.indi.items():
-            with self.subTest(id=id):
-                death = record.get('DEAT')
-                check_death = death_inlast_30days(death)
-                if check_death is True:
-                    print("deathday in last 30 days {}".format(death))
-
-    def test_US42(self):
-        "Tests if the illegitimate dates are rejected"
-
-
-        for id, records in self.indi.items():
-            with self.subTest(id=id):
-                birth_date1 = records.get('BIRT')
-                death_date1 = records.get('DEAT')
-                self.assertTrue(reject_illegitimate_dates(birth_date1))
-                if death_date1 is not None:
-                    self.assertTrue(reject_illegitimate_dates(death_date1))
-
-        for id, records in self.fam.items():
-            with self.subTest(id=id):
-                marr_date1 = records.get('MARR')
-                div_date1 = records.get('DIV')
-
-                self.assertTrue(reject_illegitimate_dates(marr_date1))
-                if div_date1 is not None:
-                    self.assertTrue(reject_illegitimate_dates(div_date1))
-    
-
-
-if __name__ == '__main__':
-    unittest.main(exit=False, verbosity=2)
