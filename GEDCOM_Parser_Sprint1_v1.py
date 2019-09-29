@@ -167,7 +167,7 @@ class Parser():
         print(x)
 
     def main(self):
-        path = "C:\Windows\System32\SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1\GEDCOM_File.ged"
+        path = "GEDCOM_File.ged"
         self.validate_file(path)
         indi, fam = self.build_data_dict(path,self.indi,self.fam)
 
