@@ -1,7 +1,8 @@
 from prettytable import PrettyTable
 import time
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
+from datetime import date
 import inspect
 
 today = time.strftime("%Y %m %d").split(' ')
@@ -14,7 +15,7 @@ class Parser():
     indi = {}
 
     def validate_file(self, path):
-
+        print(path)
         """Read the contains of file"""
         valid_lines = 0
         total_lines = 0
@@ -166,7 +167,7 @@ class Parser():
         print(x)
 
     def main(self):
-        path = "GEDCOM_File.ged"
+        path = "C:\Windows\System32\SSW555teamAishwariyaMingyuNamrataNicoleFall2019-Sprint-1\GEDCOM_File.ged"
         self.validate_file(path)
         indi, fam = self.build_data_dict(path,self.indi,self.fam)
 
@@ -213,9 +214,29 @@ def birth_before_death(birth, death):
             else:
                 return False
 
+def birth_inlast_30days(birth):
+    """Calculate birthdays in last 30 days"""
+    birthday = convert_str_date(birth).date()
+    todays_date = datetime.today().date()
+    
+    last30 = (todays_date - timedelta(days=30))
 
+    if last30 <= birthday and birthday <= todays_date:
+        return True
+    else:
+        return False
 
+def death_inlast_30days(death):
+    """Calculate death in last 30 days"""
+    deathday = convert_str_date(death).date()
+    todays_date = datetime.today().date()
+    
+    last30 = (todays_date - timedelta(days=30))
 
+    if last30 <= deathday and deathday <= todays_date:
+        return True
+    else:
+        return False
 
 
 class TestUserStories(unittest.TestCase):
@@ -245,6 +266,23 @@ class TestUserStories(unittest.TestCase):
             with self.subTest(wid=wid):
                 self.assertEqual(self.indi[wid]['SEX'], 'F')
 
+    def test_US35(self):
+        """List birthdays in last 30 days"""
+        for id, record in self.indi.items():
+            with self.subTest(id=id):
+                birth = record.get('BIRT')
+                check_birth = birth_inlast_30days(birth)
+                if check_birth is True:
+                    print("birthday in last 30 days {}".format(birth))
+
+    def test_US36(self):
+        """List death date in last 30 days"""
+        for id, record in self.indi.items():
+            with self.subTest(id=id):
+                death = record.get('DEAT')
+                check_death = death_inlast_30days(death)
+                if check_death is True:
+                    print("deathday in last 30 days {}".format(death))
 
 if __name__ == '__main__':
     unittest.main(exit=False, verbosity=2)
