@@ -2,6 +2,7 @@ import unittest
 import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
+from dateutil.parser import parse
 from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_death,birth_inlast_30days,death_inlast_30days
 
 class TestUserStories(unittest.TestCase):
@@ -76,6 +77,27 @@ class TestUserStories(unittest.TestCase):
                 if check_death is True:
                     x.add_row([id,name,death])
         print(x)
+        
+     def test_US42(self):
+        "Tests if the illegitimate dates are rejected"
+
+
+        for id, records in self.indi.items():
+            with self.subTest(id=id):
+                birth_date1 = records.get('BIRT')
+                death_date1 = records.get('DEAT')
+                self.assertTrue(reject_illegitimate_dates(birth_date1))
+                if death_date1 is not None:
+                    self.assertTrue(reject_illegitimate_dates(death_date1))
+
+        for id, records in self.fam.items():
+            with self.subTest(id=id):
+                marr_date1 = records.get('MARR')
+                div_date1 = records.get('DIV')
+
+                self.assertTrue(reject_illegitimate_dates(marr_date1))
+                if div_date1 is not None:
+                    self.assertTrue(reject_illegitimate_dates(div_date1))
 
 if __name__ == '__main__':
     unittest.main(exit=False, verbosity=2)
