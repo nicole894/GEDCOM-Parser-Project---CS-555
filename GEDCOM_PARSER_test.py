@@ -3,7 +3,7 @@ import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
 import GEDCOM_Parser_Sprint1_v1
-from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, us03_birth_before_death,us02_birth_before_marriage,birth_inlast_30days,death_inlast_30days,reject_illegitimate_dates
+from GEDCOM_Parser_Sprint1_v1 import Parser, us01_check_before_today, us03_birth_before_death,us02_birth_before_marriage,birth_inlast_30days,death_inlast_30days,us42_reject_illegitimate_dates
 import logging
 
 class TestUserStories(unittest.TestCase):
@@ -24,28 +24,67 @@ class TestUserStories(unittest.TestCase):
         logging.error(log_func[x[0],x[1]](x[2]))
         print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
 
+
     def test_US01(self):
         """Tests if the date from the dictionary is before today's date"""
+
+        user_story = inspect.stack()[0][3].replace('test_', '')
 
         for id, records in self.indi.items():
             with self.subTest(id=id): 
                 birth_date1 = records.get('BIRT')
                 death_date1 = records.get('DEAT')
 
-                if birth_date1 is not None:
-                    self.assertTrue(check_before_today(birth_date1))
+                
+                if birth_date1 is None:
+                    logging.error(
+                        f"{user_story} : INDI : {id} : Birth Date is not known ")
+                    out = False
+                else:
+                    check_birth = us01_check_before_today(birth_date1)
+                    if check_birth is False:
+                        logging.error(
+                            f"{user_story} : INDI : {id} : Birth Date {birth_date1} is before today's date.")
+                    self.assertTrue(check_birth)
+
+                
                 if death_date1 is not None:
-                    self.assertTrue(check_before_today(death_date1))
+                #     logging.error(
+                #         f"{user_story} : INDI : {id} : Death Date is not known ")
+                #     out = False
+                # else:
+                    check_death = us01_check_before_today(death_date1)
+                    if check_death is False:
+                        logging.error(
+                            f"{user_story} : INDI : {id} : Death Date {death_date1} is before today's date.")
+                    self.assertTrue(check_death)
 
         for id, records in self.fam.items():
             with self.subTest(id=id):
                 marr_date1 = records.get('MARR')
                 div_date1 = records.get('DIV')
 
-                if marr_date1 is not None:
-                    self.assertTrue(check_before_today(marr_date1))
+                if marr_date1 is None:
+                    logging.error(
+                        f"{user_story} : FAM : {id} : Marriage Date is not known ")
+                    out = False
+                else:
+                    check_marr = us01_check_before_today(marr_date1)
+                    if check_marr is False:
+                        logging.error(
+                            f"{user_story} : FAM : {id} : Marriage Date {marr_date1} is before today's date.")
+                    self.assertTrue(check_marr)
+ 
                 if div_date1 is not None:
-                    self.assertTrue(check_before_today(div_date1))
+                #     logging.error(
+                #         f"{user_story} : FAM : {id} : Divorce Date is not known ")
+                #     out = False
+                # else:
+                    check_div = us01_check_before_today(div_date1)
+                    if check_div is False:
+                        logging.error(
+                            f"{user_story} : FAM : {id} : Divorce Date {div_date1} is before today's date.")
+                    self.assertTrue(check_div)
 
 
     def test_US02(self):
