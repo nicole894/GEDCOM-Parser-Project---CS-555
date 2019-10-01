@@ -2,9 +2,14 @@ import unittest
 import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
-from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, birth_before_death,birth_inlast_30days,death_inlast_30days,reject_illegitimate_dates
+import GEDCOM_Parser_Sprint1_v1
+from GEDCOM_Parser_Sprint1_v1 import Parser, check_before_today, us03_birth_before_death,us02_birth_before_marriage,birth_inlast_30days,death_inlast_30days,reject_illegitimate_dates
+import logging
 
 class TestUserStories(unittest.TestCase):
+
+
+    logging.basicConfig(filename='gedcom.log',filemode='w', format='%(levelname)-2s : %(message)s')
 
     rint = Parser()
     indi, fam, log = rint.main()
@@ -16,6 +21,7 @@ class TestUserStories(unittest.TestCase):
      ("US22","INDI"): lambda x: f"INDIVIDUAL: {x}: US22: Individual already exists"
      }
     for x in log:
+        logging.error(log_func[x[0],x[1]](x[2]))
         print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
 
     def test_US01(self):
@@ -41,33 +47,72 @@ class TestUserStories(unittest.TestCase):
                 if div_date1 is not None:
                     self.assertTrue(check_before_today(div_date1))
 
+
     def test_US02(self):
+        '''Birth Date before marriage between spouses'''
+        user_story = inspect.stack()[0][3].replace('test_', '')
+        for id, record in self.fam.items():
+            marriage = record.get('MARR')
+            husband_birth = self.indi[record.get('HUSB')].get('BIRT')
+            wife_birth = self.indi[record.get('WIFE')].get('BIRT')
+            with self.subTest(id=id):
+                if husband_birth is None:
+                    logging.error(
+                        f"{user_story} : FAM : {id} : Husband's Birth Date is not known ")
+                    out = False
+                else:
+                    check_husband = us02_birth_before_marriage(marriage,husband_birth)
+                    if check_husband is False:
+                        logging.error(
+                            f"{user_story} : FAM : {id} : Husband's Birth Date {husband_birth} is after Marriage Date {marriage} ")
+                    self.assertTrue(check_husband)
+            with self.subTest(id=id):
+                if wife_birth is None:
+                    logging.error(
+                        f"{user_story} : FAM : {id} : Wife's Birth Date is not known ")
+                    out = False
+                else:
+                    check_wife = us02_birth_before_marriage(marriage,wife_birth)
+                    if check_wife is False:
+                        logging.error(
+                            f"{user_story} : FAM : {id} : Wife's Birth Date {wife_birth} is after Marriage Date {marriage} ")
+                    self.assertTrue(check_wife)
+
+
+    def test_US03(self):
+        '''Test for Birth Date before Death Date'''
         user_story = inspect.stack()[0][3].replace('test_','')
-        #state = []
         for id, record in self.indi.items():
             with self.subTest(id=id):
                 birth = record.get('BIRT')
                 death = record.get('DEAT')
-                out = birth_before_death(birth, death)
-                self.assertTrue(out)
+                if birth is None:
+                    logging.warning(f"{user_story} : INDI : {id} : Individual does not seems to be born yet. ")
+                    out=False
+                else:
+                    out = us03_birth_before_death(birth, death)
+                    if out is False:
+                        logging.error(f"{user_story} : INDI : {id} : Death Date {death} is before Birth Date {birth} ")
+                    self.assertTrue(out)
+
 
 
     def test_US21(self):
-        self.assertEqual(len([i for i in self.log if i[0]=='US21']),1,"Should have exactly 1 errors for US21.")
-        #self.assertIn(['US21', 'HUSB', ['@F4@', '@I3@']], self.log, "Husband Test failed.")
-        self.assertIn(['US21', 'WIFE', ['@F4@', '@I4@']], self.log, "Wife Test failed.")
-        self.assertEqual(self.log_func['US21','HUSB'](['F1','I5']), \
-            "FAMILY: F1: US21: Husband (I5) has incorrect gender", "log printing test.")
+         self.assertEqual(len([i for i in self.log if i[0]=='US21']),1,"Should have exactly 1 errors for US21.")
+         #self.assertIn(['US21', 'HUSB', ['@F4@', '@I3@']], self.log, "Husband Test failed.")
+         self.assertIn(['US21', 'WIFE', ['@F4@', '@I4@']], self.log, "Wife Test failed.")
+         self.assertEqual(self.log_func['US21','HUSB'](['F1','I5']), \
+             "FAMILY: F1: US21: Husband (I5) has incorrect gender", "log printing test.")
 
     def test_US22(self):
-        self.assertEqual(len([i for i in self.log if i[0]=='US22']),1,"Should have exactly 1 errors for US22.")
-        self.assertIn(['US22', 'INDI', '@I1@'], self.log, "Individual Test failed.")
-        #self.assertIn(['US22', 'FAM', '@F3@'], self.log, "Family Test failed.")
-        self.assertEqual(self.log_func['US22', 'INDI']('x'), "INDIVIDUAL: x: US22: Individual already exists")
-        ik=self.indi.keys()
-        fk=self.fam.keys()
-        self.assertEqual(len(ik),len(set(ik)))
-        self.assertEqual(len(fk),len(set(fk)))
+         self.assertEqual(len([i for i in self.log if i[0]=='US22']),1,"Should have exactly 1 errors for US22.")
+         self.assertIn(['US22', 'INDI', '@I1@'], self.log, "Individual Test failed.")
+         #self.assertIn(['US22', 'FAM', '@F3@'], self.log, "Family Test failed.")
+         self.assertEqual(self.log_func['US22', 'INDI']('x'), "INDIVIDUAL: x: US22: Individual already exists")
+         ik=self.indi.keys()
+         fk=self.fam.keys()
+         self.assertEqual(len(ik),len(set(ik)))
+         self.assertEqual(len(fk),len(set(fk)))
 
     def test_US35(self):
         """List birthdays in last 30 days"""
@@ -80,7 +125,7 @@ class TestUserStories(unittest.TestCase):
                     check_birth = birth_inlast_30days(birth)
                     if check_birth is True:
                         x.add_row([id,name,birth])
-        print(x)       
+        print(x)
                     
 
     def test_US36(self):

@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from datetime import date
 import inspect
 from dateutil.parser import parse
+import logging
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
@@ -184,7 +185,8 @@ class Parser():
             children= v.get('CHIL','NA')
             x.add_row([uid,'-'.join(mar),(div=='NA') and 'NA' or '-'.join(div),hid,hname,wid,wname,children])
         print(x)
-    def US21_right_gender_for_role(self, indi, fam, log):
+
+    def us21_right_gender_for_role(self, indi, fam, log):
         fam_ids=self.fam.keys()
         for k in self.fam:
             hid = self.fam[k]['HUSB'] #Tag US21
@@ -198,7 +200,7 @@ class Parser():
         path = "GEDCOM_File.ged"
         self.validate_file(path)
         self.indi,self.fam, self.log = self.build_data_dict(path,self.indi,self.fam, self.log)
-        self.US21_right_gender_for_role(self.indi,self.fam, self.log)
+        self.us21_right_gender_for_role(self.indi,self.fam, self.log)
         return  self.indi,self.fam, self.log
 
     def print_dicts(self,indi, fam):
@@ -249,17 +251,26 @@ def check_before_today(date):
     else:
         return True
 
+def us02_birth_before_marriage(marriage, birth):
 
-def birth_before_death(birth, death):
+        if birth is None:
+            return False
+        else:
+            marriage = convert_str_date(marriage)
+            birth = convert_str_date(birth)
+            if birth < marriage:
+                return True
+            else:
+                return False
+
+
+def us03_birth_before_death(birth, death):
 
         if death is None:
             return True
         else:
             birth = convert_str_date(birth)
             death = convert_str_date(death)
-            #print(birth.date())
-            #print(death.date())
-
             if birth < death:
                 return True
             else:
