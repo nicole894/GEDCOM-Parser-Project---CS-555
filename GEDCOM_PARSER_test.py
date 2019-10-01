@@ -98,21 +98,32 @@ class TestUserStories(unittest.TestCase):
 
 
     def test_US21(self):
-         self.assertEqual(len([i for i in self.log if i[0]=='US21']),1,"Should have exactly 1 errors for US21.")
-         #self.assertIn(['US21', 'HUSB', ['@F4@', '@I3@']], self.log, "Husband Test failed.")
-         self.assertIn(['US21', 'WIFE', ['@F4@', '@I4@']], self.log, "Wife Test failed.")
-         self.assertEqual(self.log_func['US21','HUSB'](['F1','I5']), \
-             "FAMILY: F1: US21: Husband (I5) has incorrect gender", "log printing test.")
+        """Test the logging and printing of correct gender for roles"""
+        print(f"\nThere is {len([i for i in self.log if i[0]=='US21'])} Error Found For User Story 21: ")
+        x = PrettyTable(["Test","Case","Spec"])
+        for i in self.log:
+            if i[0]=='US21':
+                x.add_row(i)
+        print(x)
+        self.assertEqual(self.log_func['US21','HUSB'](['F1','I5']), \
+            "FAMILY: F1: US21: Husband (I5) has incorrect gender", "log printing test.")
+        self.assertEqual(self.log_func['US21','WIFE'](['F2','I4']), \
+            "FAMILY: F2: US21: Wife (I4) has incorrect gender", "log printing test.")
 
     def test_US22(self):
-         self.assertEqual(len([i for i in self.log if i[0]=='US22']),1,"Should have exactly 1 errors for US22.")
-         self.assertIn(['US22', 'INDI', '@I1@'], self.log, "Individual Test failed.")
-         #self.assertIn(['US22', 'FAM', '@F3@'], self.log, "Family Test failed.")
-         self.assertEqual(self.log_func['US22', 'INDI']('x'), "INDIVIDUAL: x: US22: Individual already exists")
-         ik=self.indi.keys()
-         fk=self.fam.keys()
-         self.assertEqual(len(ik),len(set(ik)))
-         self.assertEqual(len(fk),len(set(fk)))
+        """Test if the Family ID and the Individual ID are Unique"""
+        print(f"\nThere is {len([i for i in self.log if i[0]=='US22'])} Error Found For User Story 22: ")
+        x = PrettyTable(["Test","Case","Spec"])
+        for i in self.log:
+            if i[0]=='US22':
+                x.add_row(i)
+        print(x)
+        self.assertEqual(self.log_func['US22', 'INDI']('x'), "INDIVIDUAL: x: US22: Individual already exists")
+        self.assertEqual(self.log_func['US22', 'FAM']('x'), "FAMILY: x: US22: Family already exists")
+        ik=self.indi.keys()
+        fk=self.fam.keys()
+        self.assertEqual(len(ik),len(set(ik)))
+        self.assertEqual(len(fk),len(set(fk)))
 
     def test_US35(self):
         """List birthdays in last 30 days"""
