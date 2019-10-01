@@ -278,7 +278,7 @@ def us03_birth_before_death(birth, death):
             else:
                 return False
 
-def birth_inlast_30days(birth):
+def us35_birth_inlast_30days(birth):
     """Calculate birthdays in last 30 days"""
     birthday = convert_str_date(birth).date()
     todays_date = datetime.today().date()
@@ -290,7 +290,7 @@ def birth_inlast_30days(birth):
     else:
         return False
 
-def death_inlast_30days(death):
+def us36_death_inlast_30days(death):
     """Calculate death in last 30 days"""
     if death is None:
         return False
