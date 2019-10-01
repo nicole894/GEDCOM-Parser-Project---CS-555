@@ -17,7 +17,7 @@ class Parser():
     log = []
 
     def validate_file(self, path):
-        path = "GEDCOM_File.ged"
+        path = "GEDCOM_File_goodOne.ged"
         print(path)
         """Read the contains of file"""
         valid_lines = 0
@@ -62,7 +62,7 @@ class Parser():
         #return  fp.seek(0)
 
 
-    def create_data(self, counter,content_list):
+    def create_data(self, counter,content_list,dict_type, id, log):
         spec_list = ['BIRT','DEAT','DIV','MARR']
         data_dict={}
         fams_list = []
@@ -82,10 +82,12 @@ class Parser():
             elif int(each_data[0]) == 1 and each_data[1] in spec_list :
                  date_list = content_list[i+1]
                  date = date_list[2]
-                 test_date = reject_illegitimate_dates(date)
+                 test_date = us42_reject_illegitimate_dates(date)
                  #print(test_date)
                  if test_date == "False":
                     data_dict.update({each_data[1]: date})
+                 else:
+                    log.append(["US42",each_data[1],[id, date]])
 
         return data_dict
 
@@ -108,13 +110,13 @@ class Parser():
 
             for i in content_list:
                 if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
-                    data = self.create_data(counter,content_list)
+                    data = self.create_data(counter,content_list,i[2],i[1],log)
                     if i[1] in indi.keys(): #Tag US22
                         log.append(["US22","INDI",i[1]])
                     else:
                         indi.update({i[1]:data})
                 elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
-                    data = self.create_data(counter, content_list)
+                    data = self.create_data(counter, content_list,i[2],i[1],log)
                     if i[1] in fam.keys(): #Tag US22
                         log.append(["US22","FAM",i[1]])
                     else:
@@ -197,7 +199,7 @@ class Parser():
                 self.log.append(["US21","WIFE",[k,wid]]) #End US21
 
     def main(self):
-        path = "GEDCOM_File.ged"
+        path = "GEDCOM_File_goodOne.ged"
         self.validate_file(path)
         self.indi,self.fam, self.log = self.build_data_dict(path,self.indi,self.fam, self.log)
         self.us21_right_gender_for_role(self.indi,self.fam, self.log)
@@ -227,7 +229,7 @@ def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
-def reject_illegitimate_dates(dates):
+def us42_reject_illegitimate_dates(dates):
     "Rejects illegitimate dates"
     #print("In REJECT FUN")
     return_flag = 'False'
@@ -237,7 +239,7 @@ def reject_illegitimate_dates(dates):
         return_flag = 'True'
     return return_flag
 
-def check_before_today(date):
+def us01_check_before_today(date):
 
     """Checks if the date is before today"""
 
