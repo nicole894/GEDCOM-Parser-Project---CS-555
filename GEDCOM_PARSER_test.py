@@ -179,7 +179,7 @@ class TestUserStories(unittest.TestCase):
                 birth = record.get('BIRT')
                 name = record.get('NAME')
                 if birth is not None:
-                    check_birth = birth_inlast_30days(birth)
+                    check_birth = us35_birth_inlast_30days(birth)
                     if check_birth is True:
                         x.add_row([id,name,birth])
         print(f"\n{x}")
@@ -192,7 +192,7 @@ class TestUserStories(unittest.TestCase):
             with self.subTest(id=id):
                 death = record.get('DEAT')
                 name = record.get('NAME')
-                check_death = death_inlast_30days(death)
+                check_death = us36_death_inlast_30days(death)
                 if check_death is True:
                     x.add_row([id,name,death])
         #logging.(f"List all deaths in the last 30 days \n {x}")            
