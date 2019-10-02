@@ -5,7 +5,11 @@ from datetime import datetime, date
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-
+log_func=\
+    {("US21","HUSB"): lambda x: f"FAMILY: {x[0]}: US21: Husband ({x[1]}) has incorrect gender",
+     ("US21","WIFE"): lambda x: f"FAMILY: {x[0]}: US21: Wife ({x[1]}) has incorrect gender",
+     ("US22","FAM"): lambda x: f"FAMILY: {x}: US22: Family already exists",
+     ("US22","INDI"): lambda x: f"INDIVIDUAL: {x}: US22: Individual already exists"}
 
 def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
@@ -82,7 +86,7 @@ def create_data(counter,content_list):
     return data_dict
 
 
-def build_data_dict(path, indi, fam):
+def build_data_dict(path, indi, fam, log):
     try:
         fp = open(path, 'r')
     except FileNotFoundError:
@@ -101,12 +105,24 @@ def build_data_dict(path, indi, fam):
         for i in content_list:
             if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
                 data = create_data(counter,content_list)
-                indi.update({i[1]:data})
+                if i[1] in indi.keys(): #Tag US22
+                    log.append(["US22","INDI",i[1]])
+                else:
+                    indi.update({i[1]:data})
             elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
                 data = create_data(counter, content_list)
-                fam.update({i[1]: data})
+                if i[1] in fam.keys(): #Tag US22
+                    log.append(["US22","FAM",i[1]])
+                else:
+                    fam.update({i[1]: data})
+                    hid = fam[i[1]]['HUSB'] #Tag US21
+                    wid = fam[i[1]]['WIFE']
+                    if indi[hid]['SEX']!='M':
+                        log.append(["US21","HUSB",[i[1],hid]])
+                    if indi[wid]['SEX']!='F':
+                        log.append(["US21","WIFE",[i[1],wid]]) #End US21
             counter = counter + 1
-        return indi, fam
+        return indi, fam, log
 
 
 
@@ -167,8 +183,9 @@ def main():
     path = "GEDCOM_File.ged"
     fam = {}
     indi = {}
+    log = []
     validate_file(path)
-    indi, fam = build_data_dict(path,indi,fam)
+    indi, fam, log = build_data_dict(path,indi,fam, log)
     print("Individual Dictionary: {}" .format(indi))
     print("Families Dictionary: {}" .format(fam))
     
@@ -176,7 +193,8 @@ def main():
     print_indi(indi)
     print("Families")
     print_fam(fam, indi)
-
+    for x in log:
+        print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
 
 if __name__ == '__main__':
     main()

@@ -1,20 +1,24 @@
 from prettytable import PrettyTable
 import time
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
+from datetime import date
 import inspect
+from dateutil.parser import parse
+import logging
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-
 class Parser():
 
     test_v ='This works'
     fam = {}
     indi = {}
+    log = []
 
     def validate_file(self, path):
-
+        path = "GEDCOM_File_withErrors.ged"
+        print(path)
         """Read the contains of file"""
         valid_lines = 0
         total_lines = 0
@@ -58,7 +62,7 @@ class Parser():
         #return  fp.seek(0)
 
 
-    def create_data(self, counter,content_list):
+    def create_data(self, counter,content_list,dict_type, id, log):
         spec_list = ['BIRT','DEAT','DIV','MARR']
         data_dict={}
         fams_list = []
@@ -78,12 +82,17 @@ class Parser():
             elif int(each_data[0]) == 1 and each_data[1] in spec_list :
                  date_list = content_list[i+1]
                  date = date_list[2]
-                 data_dict.update({each_data[1]: date})
+                 test_date = us42_reject_illegitimate_dates(date)
+                 #print(test_date)
+                 if test_date == "False":
+                    data_dict.update({each_data[1]: date})
+                 else:
+                    log.append(["US42",each_data[1],[id, date]])
 
         return data_dict
 
 
-    def build_data_dict(self, path, indi, fam):
+    def build_data_dict(self, path, indi, fam, log):
         try:
             fp = open(path, 'r')
         except FileNotFoundError:
@@ -101,14 +110,20 @@ class Parser():
 
             for i in content_list:
                 if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
-                    data = self.create_data(counter,content_list)
-                    indi.update({i[1]:data})
+                    data = self.create_data(counter,content_list,i[2],i[1],log)
+                    if i[1] in indi.keys(): #Tag US22
+                        log.append(["US22","INDI",i[1]])
+                    else:
+                        indi.update({i[1]:data})
                 elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
-                    data = self.create_data(counter, content_list)
-                    fam.update({i[1]: data})
+                    data = self.create_data(counter, content_list,i[2],i[1],log)
+                    if i[1] in fam.keys(): #Tag US22
+                        log.append(["US22","FAM",i[1]])
+                    else:
+                        fam.update({i[1]: data})
                 counter = counter + 1
                 fp.close()
-            return indi, fam
+            return indi, fam, log
 
 
 
@@ -132,12 +147,17 @@ class Parser():
             uid=k
             name=v.get('NAME')
             sex=v.get('SEX')
-            DOB= self.date_format(v.get('BIRT').split(' '))
+            DOB= v.get('BIRT', 'NA')
+            born = (DOB!='NA')
+            if born:
+                DOB = self.date_format(DOB.split(' '))
             DOD=v.get('DEAT','NA')
             alive=(DOD=='NA')
             if not alive:
                 DOD = self.date_format(DOD.split(' '))
-            if alive:
+            if not born:
+                age='NA'
+            elif alive:
                 age = int(today[0]) - int(DOB[0]) - self.age_carry(today,DOB)
             else:
                 age = int(DOD[0]) - int(DOB[0]) - self.age_carry(DOD,DOB)
@@ -153,7 +173,10 @@ class Parser():
         x=PrettyTable(["ID","Married","Divorced","Husband ID","Husband Name","Wife ID","Wife Name","Children"])
         for k,v in fam_dict.items():
             uid=k
-            mar=self.date_format(v.get('MARR').split(' '))
+            mar= v.get('MARR', 'NA')
+            married = (mar!='NA')
+            if married:
+                mar = self.date_format(mar.split(' '))
             div=v.get('DIV', 'NA')
             if div!='NA':
                 div=self.date_format(div.split(' '))
@@ -165,12 +188,22 @@ class Parser():
             x.add_row([uid,'-'.join(mar),(div=='NA') and 'NA' or '-'.join(div),hid,hname,wid,wname,children])
         print(x)
 
-    def main(self):
-        path = "GEDCOM_File.ged"
-        self.validate_file(path)
-        indi, fam = self.build_data_dict(path,self.indi,self.fam)
+    def us21_right_gender_for_role(self, indi, fam, log):
+        fam_ids=self.fam.keys()
+        for k in self.fam:
+            hid = self.fam[k]['HUSB'] #Tag US21
+            wid = self.fam[k]['WIFE']
+            if self.indi[hid]['SEX']!='M':
+                self.log.append(["US21","HUSB",[k,hid]])
+            if self.indi[wid]['SEX']!='F':
+                self.log.append(["US21","WIFE",[k,wid]]) #End US21
 
-        return  indi,fam
+    def main(self):
+        path = "GEDCOM_File_withErrors.ged"
+        self.validate_file(path)
+        self.indi,self.fam, self.log = self.build_data_dict(path,self.indi,self.fam, self.log)
+        self.us21_right_gender_for_role(self.indi,self.fam, self.log)
+        return  self.indi,self.fam, self.log
 
     def print_dicts(self,indi, fam):
         print("Individual Dictionary: {}" .format(indi))
@@ -196,55 +229,81 @@ def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
+def us42_reject_illegitimate_dates(dates):
+    "Rejects illegitimate dates"
+    #print("In REJECT FUN")
+    return_flag = 'False'
+    try:
+        parse(dates)
+    except ValueError:
+        return_flag = 'True'
+    return return_flag
+
+def us01_check_before_today(date):
+
+    """Checks if the date is before today"""
+
+    date1= convert_str_date(date)
+    date2 = date1.date()
+
+    today = datetime.today()
+  
+    if date2 > today.date():
+        return False
+    else:
+        return True
+
+def us02_birth_before_marriage(marriage, birth):
+
+        if birth is None:
+            return False
+        else:
+            marriage = convert_str_date(marriage)
+            birth = convert_str_date(birth)
+            if birth < marriage:
+                return True
+            else:
+                return False
 
 
-def birth_before_death(birth, death):
+def us03_birth_before_death(birth, death):
 
         if death is None:
             return True
         else:
             birth = convert_str_date(birth)
             death = convert_str_date(death)
-            #print(birth.date())
-            #print(death.date())
-
             if birth < death:
                 return True
             else:
                 return False
 
+def us35_birth_inlast_30days(birth):
+    """Calculate birthdays in last 30 days"""
+    birthday = convert_str_date(birth).date()
+    todays_date = datetime.today().date()
+    
+    last30 = (todays_date - timedelta(days=30))
+
+    if last30 <= birthday and birthday <= todays_date:
+        return True
+    else:
+        return False
+
+def us36_death_inlast_30days(death):
+    """Calculate death in last 30 days"""
+    if death is None:
+        return False
+    else:
+        deathday = convert_str_date(death).date()
+        todays_date = datetime.today().date()
+        
+        last30 = (todays_date - timedelta(days=30))
+
+        if last30 <= deathday and deathday <= todays_date:
+            return True
+        else:
+            return False
 
 
 
-
-
-class TestUserStories(unittest.TestCase):
-
-    print = Parser()
-    indi, fam = print.main()
-    print.print_dicts(indi,fam)
-
-    def test_US02(self):
-        user_story = inspect.stack()[0][3].replace('test_','')
-        #state = []
-        for id, record in self.indi.items():
-            with self.subTest(id=id):
-                birth = record.get('BIRT')
-                death = record.get('DEAT')
-                out = birth_before_death(birth, death)
-                self.assertTrue(out)
-
-
-    def test_US21(self):
-        ids = sorted(list(set([self.fam[i]['HUSB'] for i in self.fam.keys()])))
-        for hid in ids:
-            with self.subTest(hid=hid):
-                self.assertEqual(self.indi[hid]['SEX'], 'M')
-        ids = sorted(list(set([self.fam[i]['WIFE'] for i in self.fam.keys()])))
-        for wid in ids:
-            with self.subTest(wid=wid):
-                self.assertEqual(self.indi[wid]['SEX'], 'F')
-
-
-if __name__ == '__main__':
-    unittest.main(exit=False, verbosity=2)
