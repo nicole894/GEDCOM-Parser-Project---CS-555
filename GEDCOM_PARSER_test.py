@@ -3,7 +3,7 @@ import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
 import GEDCOM_Parser_Sprint1_v1
-from GEDCOM_Parser_Sprint1_v1 import Parser, us01_check_before_today, us03_birth_before_death,us02_birth_before_marriage,birth_inlast_30days,death_inlast_30days,us42_reject_illegitimate_dates
+from GEDCOM_Parser_Sprint1_v1 import Parser, us01_check_before_today, us03_birth_before_death,us02_birth_before_marriage,us35_birth_inlast_30days,us36_death_inlast_30days,us42_reject_illegitimate_dates
 import logging
 
 class TestUserStories(unittest.TestCase):
