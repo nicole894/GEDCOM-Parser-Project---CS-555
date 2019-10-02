@@ -17,7 +17,7 @@ class Parser():
     log = []
 
     def validate_file(self, path):
-        path = "GEDCOM_File_goodOne.ged"
+        path = "GEDCOM_File_withErrors.ged"
         print(path)
         """Read the contains of file"""
         valid_lines = 0
@@ -199,7 +199,7 @@ class Parser():
                 self.log.append(["US21","WIFE",[k,wid]]) #End US21
 
     def main(self):
-        path = "GEDCOM_File_goodOne.ged"
+        path = "GEDCOM_File_withErrors.ged"
         self.validate_file(path)
         self.indi,self.fam, self.log = self.build_data_dict(path,self.indi,self.fam, self.log)
         self.us21_right_gender_for_role(self.indi,self.fam, self.log)

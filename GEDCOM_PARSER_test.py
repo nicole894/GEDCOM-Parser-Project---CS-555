@@ -110,7 +110,7 @@ class TestUserStories(unittest.TestCase):
                         check_husband = us02_birth_before_marriage(marriage,husband_birth)
                         if check_husband is False:
                             logging.error(
-                                f"{user_story} : FAM : {id} : Husband's Birth Date {husband_birth} is after Marriage Date {marriage} ")
+                                f"{user_story} : FAM : {id} : Husband's ({record.get('HUSB')}) Birth Date {husband_birth} is after Marriage Date {marriage} ")
                         self.assertTrue(check_husband)
                 with self.subTest(id=id):
                     if wife_birth is None:
@@ -121,7 +121,7 @@ class TestUserStories(unittest.TestCase):
                         check_wife = us02_birth_before_marriage(marriage,wife_birth)
                         if check_wife is False:
                             logging.error(
-                                f"{user_story} : FAM : {id} : Wife's Birth Date {wife_birth} is after Marriage Date {marriage} ")
+                                f"{user_story} : FAM : {id} : Wife's ({record.get('WIFE')}) Birth Date {wife_birth} is after Marriage Date {marriage} ")
                         self.assertTrue(check_wife)
 
 
@@ -182,7 +182,7 @@ class TestUserStories(unittest.TestCase):
                     check_birth = us35_birth_inlast_30days(birth)
                     if check_birth is True:
                         x.add_row([id,name,birth])
-        print(f"\n{x}")
+        print(f"\n List of birthdays in the last 30 days. \n {x}")
                     
 
     def test_US36(self):
@@ -196,7 +196,7 @@ class TestUserStories(unittest.TestCase):
                 if check_death is True:
                     x.add_row([id,name,death])
         #logging.(f"List all deaths in the last 30 days \n {x}")            
-        print(f"\n{x}")
+        print(f"\n List of deaths in the last 30 days. \n {x}")
         
     def test_US42(self):
         "Tests if the illegitimate dates are rejected"
