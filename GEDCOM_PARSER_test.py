@@ -9,7 +9,7 @@ import logging
 class TestUserStories(unittest.TestCase):
 
 
-    logging.basicConfig(filename='gedcom.log',filemode='w', format='%(levelname)-2s : %(message)s')
+    logging.basicConfig(filename='gedcom.log',filemode='w', format='%(levelname)-2s : %(message)s', level=logging.INFO)
 
     rint = Parser()
     indi, fam, log = rint.main()
@@ -27,7 +27,6 @@ class TestUserStories(unittest.TestCase):
     for x in log:
         logging.error(log_func[x[0],x[1]](x[2]))
         #print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
-
 
     def test_US01(self):
         """Tests if the date from the dictionary is before today's date"""
@@ -126,20 +125,11 @@ class TestUserStories(unittest.TestCase):
 
 
     def test_US03(self):
-        '''Test for Birth Date before Death Date'''
-        user_story = inspect.stack()[0][3].replace('test_','')
-        for id, record in self.indi.items():
-            with self.subTest(id=id):
-                birth = record.get('BIRT')
-                death = record.get('DEAT')
-                if birth is None:
-                    logging.warning(f"{user_story} : INDI : {id} : Individual does not seems to be born yet. ")
-                    out=False
-                else:
-                    out = us03_birth_before_death(birth, death)
-                    if out is False:
-                        logging.error(f"{user_story} : INDI : {id} : Death Date {death} is before Birth Date {birth} ")
-                    self.assertTrue(out)
+
+        #user_story = inspect.stack()[0][3].replace('test_','')
+        list_of_truth = us03_birth_before_death()
+        self.assertNotIn('No', list_of_truth)
+
 
 
 
@@ -182,7 +172,8 @@ class TestUserStories(unittest.TestCase):
                     check_birth = us35_birth_inlast_30days(birth)
                     if check_birth is True:
                         x.add_row([id,name,birth])
-        print(f"\n List of birthdays in the last 30 days. \n {x}")
+        logging.info(f" US35: INDI: List all birthdays in the last 30 days \n {x}")
+        #print(f"\n List of birthdays in the last 30 days. \n {x}")
                     
 
     def test_US36(self):
@@ -195,8 +186,8 @@ class TestUserStories(unittest.TestCase):
                 check_death = us36_death_inlast_30days(death)
                 if check_death is True:
                     x.add_row([id,name,death])
-        #logging.(f"List all deaths in the last 30 days \n {x}")            
-        print(f"\n List of deaths in the last 30 days. \n {x}")
+        logging.info(f" US36: INDI: List all deaths in the last 30 days \n {x}")
+        #print(f"\n List of deaths in the last 30 days. \n {x}")
         
     def test_US42(self):
         "Tests if the illegitimate dates are rejected"
@@ -222,5 +213,8 @@ class TestUserStories(unittest.TestCase):
                 if div_date1 is not None:
                     self.assertTrue(us42_reject_illegitimate_dates(div_date1))
 
+
+
+
 if __name__ == '__main__':
-    unittest.main(exit=False, verbosity=2)
+    unittest.main()
