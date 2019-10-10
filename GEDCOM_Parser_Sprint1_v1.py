@@ -18,7 +18,7 @@ class Parser():
 
     def validate_file(self, path):
         path = "GEDCOM_File_withErrors.ged"
-        print(path)
+        #print(path)
         """Read the contains of file"""
         valid_lines = 0
         total_lines = 0
@@ -164,7 +164,9 @@ class Parser():
             child=v.get('FAMC','NA')
             spouse=v.get('FAMS', 'NA')
             x.add_row([uid,name,sex,'-'.join(DOB),age,alive,alive and 'NA' or '-'.join(DOD),child,spouse])
-        print(x)
+        #print(x)
+        logging.info(f"Individual Table \n {x}")
+
 
     def print_fam(self, fam_dict, indi_dict):
         def get_name(indi_dict,nid):
@@ -186,7 +188,8 @@ class Parser():
             wname=get_name(indi_dict,wid)
             children= v.get('CHIL','NA')
             x.add_row([uid,'-'.join(mar),(div=='NA') and 'NA' or '-'.join(div),hid,hname,wid,wname,children])
-        print(x)
+        logging.info(f"Family Table \n {x}")
+        #print(x)
 
     def us21_right_gender_for_role(self, indi, fam, log):
         fam_ids=self.fam.keys()
@@ -206,11 +209,11 @@ class Parser():
         return  self.indi,self.fam, self.log
 
     def print_dicts(self,indi, fam):
-        print("Individual Dictionary: {}" .format(indi))
-        print("Families Dictionary: {}" .format(fam))
-        print("Individuals")
+        #print("Individual Dictionary: {}" .format(indi))
+        #print("Families Dictionary: {}" .format(fam))
+        #print("Individuals")
         self.print_indi(indi)
-        print("Families")
+        #print("Families")
         self.print_fam(fam, indi)
 
 #End of the Parser Class
@@ -266,17 +269,34 @@ def us02_birth_before_marriage(marriage, birth):
                 return False
 
 
-def us03_birth_before_death(birth, death):
+def check_date1_before_date2(date1, date2):
+    date1 = convert_str_date(date1)
+    date2 =convert_str_date(date2)
+    if date1 < date2:
+        return True
+    else:
+        return False
 
-        if death is None:
-            return True
-        else:
-            birth = convert_str_date(birth)
-            death = convert_str_date(death)
-            if birth < death:
-                return True
+
+def us03_birth_before_death():
+    g = Parser()
+    checked_list = []
+    #print(f"This is a list of indi: {g.indi}")
+    for id, v in g.indi.items():
+        birth = v.get('BIRT')
+        death = v.get('DEAT')
+        if birth and death:
+            result = check_date1_before_date2(birth, death)
+            if result is True:
+                checked_list.append("Yes")
             else:
-                return False
+                #logging.error(f"{user_story} : INDI : {id} : Death Date {death} is before Birth Date {birth} ")
+                checked_list.append("No")
+                #print(f"US03 : INDI : {id} : Death Date {convert_str_date(death).date()} is before Birth Date {convert_str_date(birth).date()} ")
+                logging.error(f"US03 : INDI : {id} : Death Date {convert_str_date(death).date()} is before Birth Date {convert_str_date(birth).date()} ")
+    return checked_list
+
+
 
 def us35_birth_inlast_30days(birth):
     """Calculate birthdays in last 30 days"""
