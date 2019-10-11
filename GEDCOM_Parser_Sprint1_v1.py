@@ -277,7 +277,6 @@ def check_date1_before_date2(date1, date2):
     else:
         return False
 
-
 def us03_birth_before_death():
     g = Parser()
     checked_list = []
@@ -295,6 +294,53 @@ def us03_birth_before_death():
                 #print(f"US03 : INDI : {id} : Death Date {convert_str_date(death).date()} is before Birth Date {convert_str_date(birth).date()} ")
                 logging.error(f"US03 : INDI : {id} : Death Date {convert_str_date(death).date()} is before Birth Date {convert_str_date(birth).date()} ")
     return checked_list
+
+def us04_marriage_before_divorce():
+    g = Parser()
+    checked_list = []
+    for id, v in g.fam.items():
+        marriage = v.get('MARR')
+        divorce = v.get('DIV')
+        if marriage and divorce:
+            result = check_date1_before_date2(marriage, divorce)
+            if result is True:
+                checked_list.append("Yes")
+            else:
+                checked_list.append("No")
+                logging.error(f'US04 : FAM : {id} : In Family ({id}) Divorce Date {convert_str_date(divorce).date()} is '
+                              f'after Marriage Date {convert_str_date(marriage).date()}')
+    return checked_list
+
+
+def us05_marriage_before_death():
+    g = Parser()
+    checked_list = []
+    for id, v in g.fam.items():
+        marriage = v.get('MARR')
+        husb = v.get('HUSB')
+        wife = v.get('WIFE')
+        husb_birth = g.indi[husb].get('BIRT')
+        wife_birth = g.indi[wife].get('BIRT')
+        print(f"Husband is :{husb}  & birthdate is : {husb_birth}")
+        print(f"Wife is :{wife} & birthdate is : {wife_birth}")
+        if marriage and husb_birth and wife_birth:
+            husb_result = check_date1_before_date2(husb_birth, marriage)
+            print(f"Husband result is {husb_result}")
+            if husb_result is False:
+                logging.error(f'US05 : FAM : {id} : In Family ({id}), Marriage Date {convert_str_date(marriage).date()}'
+                              f' is before Husband\'s ({husb}) birthdate {convert_str_date(husb_birth).date()}')
+            wife_result = check_date1_before_date2(wife_birth, marriage)
+
+            if wife_result is False:
+                logging.error(f'US05 : FAM : {id} : In Family ({id}), Marriage Date {convert_str_date(marriage).date()}'
+                    f' is before Wife\'s ({wife}) birthdate {convert_str_date(wife_birth).date()}')
+            if wife_result and husb_result:
+                checked_list.append('Yes')
+            else:
+                checked_list.append('No')
+
+    return checked_list
+
 
 
 

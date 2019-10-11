@@ -3,7 +3,7 @@ import GEDCOM_Parser_Sprint1_v1
 from prettytable import PrettyTable
 import inspect
 import GEDCOM_Parser_Sprint1_v1
-from GEDCOM_Parser_Sprint1_v1 import Parser, us01_check_before_today, us03_birth_before_death,us02_birth_before_marriage,us35_birth_inlast_30days,us36_death_inlast_30days,us42_reject_illegitimate_dates
+from GEDCOM_Parser_Sprint1_v1 import Parser, us01_check_before_today, us03_birth_before_death,us02_birth_before_marriage,us35_birth_inlast_30days,us36_death_inlast_30days,us42_reject_illegitimate_dates, us04_marriage_before_divorce, us05_marriage_before_death
 import logging
 
 class TestUserStories(unittest.TestCase):
@@ -21,13 +21,15 @@ class TestUserStories(unittest.TestCase):
      ("US22","INDI"): lambda x: f"US22: INDI: {x}: Individual already exists",
      ("US42","BIRT"): lambda x: f"US42: INDI: {x[0]}: Illegitimate date for Birth Date {x[1]}",
      ("US42","DEAT"): lambda x: f"US42: INDI: {x[0]}: Illegitimate date for Death Date {x[1]}",
-     ("US42","MARR"): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Marraige Date {x[1]}",
+     ("US42","MARR"): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Marriage Date {x[1]}",
      ("US42","DIV"): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Divorce Date {x[1]}"
      }
     for x in log:
         logging.error(log_func[x[0],x[1]](x[2]))
         #print("ERROR: %s" %(log_func[x[0],x[1]](x[2])))
 
+
+    # Start of Sprint 1
     def test_US01(self):
         """Tests if the date from the dictionary is before today's date"""
 
@@ -213,6 +215,18 @@ class TestUserStories(unittest.TestCase):
                 if div_date1 is not None:
                     self.assertTrue(us42_reject_illegitimate_dates(div_date1))
 
+    #End of Sprint-1
+
+
+    #Start of Sprint-2
+
+    def test_US04(self):
+        list_of_truth = us04_marriage_before_divorce()
+        self.assertNotIn('No', list_of_truth)
+
+    def test_US05(self):
+        list_of_truth = us05_marriage_before_death()
+        self.assertNotIn('No', list_of_truth)
 
 
 

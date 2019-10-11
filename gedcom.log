@@ -45,7 +45,7 @@ INFO : Family Table
 ERROR : US22: INDI: @I1@: Individual already exists
 ERROR : US42: INDI: @I6@: Illegitimate date for Birth Date 32 FEB 1968
 ERROR : US42: INDI: @I19@: Illegitimate date for Death Date 43 JUN 2004
-ERROR : US42: FAM: @F1@: Illegitimate date for Marraige Date 32 AUG 2008
+ERROR : US42: FAM: @F1@: Illegitimate date for Marriage Date 32 AUG 2008
 ERROR : US21: FAM: @F4@: Wife (@I4@) has incorrect gender
 ERROR : US01 : INDI : @I2@ : Birth Date 12 DEC 2020 is before today's date.
 ERROR : US01 : INDI : @I6@ : Birth Date is not known 
@@ -59,6 +59,9 @@ ERROR : US02 : FAM : @F2@ : Wife's (@I9@) Birth Date 31 DEC 2021 is after Marria
 ERROR : US02 : FAM : @F3@ : Wife's (@I2@) Birth Date 12 DEC 2020 is after Marriage Date 14 FEB 2020 
 ERROR : US02 : FAM : @F6@ : Husband's Birth Date is not known 
 ERROR : US03 : INDI : @I9@ : Death Date 2019-09-29 is before Birth Date 2021-12-31 
+ERROR : US04 : FAM : @F3@ : In Family (@F3@) Divorce Date 2006-10-04 is after Marriage Date 2020-02-14
+ERROR : US05 : FAM : @F2@ : In Family (@F2@), Marriage Date 1968-06-06 is before Wife's (@I9@) birthdate 2021-12-31
+ERROR : US05 : FAM : @F3@ : In Family (@F3@), Marriage Date 2020-02-14 is before Wife's (@I2@) birthdate 2020-12-12
 INFO :  US35: INDI: List all birthdays in the last 30 days 
  +-------+-----------------+-------------+
 |   ID  |       Name      |   Birthday  |
