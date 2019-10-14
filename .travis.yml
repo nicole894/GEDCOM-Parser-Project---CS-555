@@ -3,4 +3,4 @@ python:
  - 3.7
  - 3.6
 script:
- python GDriver.py
+ python GPtest.py
