@@ -6,7 +6,7 @@ class TestUS(unittest.TestCase):
     __ALL__=["US01","US02","US03","US21","US22","US35","US36","US42",
              "US04","US05","US07","US08","US09","US10","US38","US39"]
     __INFO__=["US35", "US36", "US38", "US39"]
-    p=D.main('GEDCOM_File.ged')
+    p=D.main('GEDCOM_File_goodOne.ged')
 
     def run_test(self,_test):
         x = None
