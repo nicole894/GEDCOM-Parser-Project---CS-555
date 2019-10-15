@@ -1,6 +1,9 @@
 import unittest
 from prettytable import PrettyTable
 import GDriver as D
+from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days
+import GParser as P
+D.today = '15 OCT 2019'
 
 class TestUS(unittest.TestCase):
     __ALL__=["US01","US02","US03","US21","US22","US35","US36","US42",
@@ -32,6 +35,7 @@ class TestUS(unittest.TestCase):
             a = record[2];
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
+        
     def test_US02(self):
         expected_id = ['@F1@', '@F2@', '@F3@', '@F6@'];
         generated_id =[]
@@ -40,6 +44,7 @@ class TestUS(unittest.TestCase):
             a = record[2];
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
+        
     def test_US03(self):
         expected_id = ['@I6@', '@I9@']
         generated_id =[]
@@ -48,14 +53,29 @@ class TestUS(unittest.TestCase):
             a = record[2];
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
+        
     def test_US21(self):
         self.run_test('US21')
+        
     def test_US22(self):
         self.run_test('US22')
+        
     def test_US35(self):
-        self.run_test('US35')
+        expected_id = ['@I23@']
+        q = P.Parser()
+        
+        fix_date = D.today 
+        generated_id = us35_birth_inlast_30days(q, fix_date)
+        self.assertEqual(expected_id, generated_id)
+        
     def test_US36(self):
-        self.run_test('US36')
+        expected_id = ['@I9@']
+        q = P.Parser()
+        
+        fix_date = D.today 
+        generated_id = us36_death_inlast_30days(q, fix_date)
+        self.assertEqual(expected_id, generated_id)
+
     def test_US42(self):
         expected_id = ['@I6@','@I19@','@F1@']
         generated_id = []
@@ -64,6 +84,7 @@ class TestUS(unittest.TestCase):
             a = record[2];
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
+        
     def test_US04(self):
         expected_id = ['@F3@']
         generated_id = []
@@ -93,8 +114,10 @@ class TestUS(unittest.TestCase):
 
     def test_US08(self):
         self.run_test('US08')
+        
     def test_US09(self):
         self.run_test('US09')
+        
     def test_US10(self):
         expected_id = ['@F10@']
         generated_id = []
@@ -105,9 +128,32 @@ class TestUS(unittest.TestCase):
         self.assertEqual(expected_id, generated_id)
 
     def test_US38(self):
-        self.run_test('US38')
+        
+        expected_id = ['@I5@', '@I21@']
+        q = P.Parser()
+       
+        fix_date = D.today 
+        generated_id = us38_list_upcoming_birthdays(q, fix_date)
+        self.assertEqual(expected_id, generated_id)
+       
     def test_US39(self):
-        self.run_test('US39')
+        expected_id = ['@F5@','@F9@']
+        q = P.Parser()
+        
+        fix_date = D.today 
+        generated_id = us39_list_upcoming_anniversary(q, fix_date)
+        self.assertEqual(expected_id, generated_id)
 
 if __name__ == '__main__':
     unittest.main()
+
+        
+
+        
+   
+
+
+
+
+
+
