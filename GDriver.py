@@ -5,20 +5,21 @@ import PTutil as U
 import GParser as P
 # assert U.api_version >= P.api_version, "Parser is incompatible with api version of PTutil."
 md=30.4;yd=365.25
+today = 'today'
 
 
 def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
-def check_date1_before_date2(date1, date2='today'):
+def check_date1_before_date2(date1, date2= today):
     if None in [date1, date2]:
         return None
     date1 = (date1 == 'today') and datetime.today() or convert_str_date(date1)
     date2 = (date2 == 'today') and datetime.today() or convert_str_date(date2)
     return date1 < date2
 
-def date_in_n_days_from_today(date,n, td='today', both=True):
+def date_in_n_days_from_today(date,n, td= today, both=True):
     if None in [date, td]:
         return None
     else:
@@ -98,8 +99,12 @@ def us02_birth_before_marriage(p):
             elif C(wbir, mar) is False:
                 p.log.append(['US02','WIFE',[id,wid,Kf(wbir),K_mar]])
 
-def us35_birth_inlast_30days(p):
+def us35_birth_inlast_30days(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
+    id3 = []
+    todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
+    todays_date = todays_date.date()
+
     for id, v in p.indi.items():
         birth = v.get('BIRT')
         name = v.get('NAME')
@@ -107,10 +112,13 @@ def us35_birth_inlast_30days(p):
             check_birth = N(birth, -30)
             if check_birth is True:
                 x.add_row([id,name,birth])
+                id3.append(id)
     p.log.append(['US35','BIRT',[x]])
+    return id3
 
-def us36_death_inlast_30days(p):
+def us36_death_inlast_30days(p, todays_date):
     x = PrettyTable(["ID","Name","Death"])
+    id4 = []
     for id, v in p.indi.items():
         death = v.get('DEAT')
         name = v.get('NAME')
@@ -118,7 +126,9 @@ def us36_death_inlast_30days(p):
             check_death = N(death, -30)
             if check_death is True:
                 x.add_row([id,name,death])
+                id4.append(id)
     p.log.append(['US36','DEAT',[x]])
+    return id4
 
 def us04_marriage_before_divorce(p):
     for id, v in p.fam.items():
@@ -198,21 +208,31 @@ def us10_marriage_after_14(p):
             if N(mar, 14*yd, wbir):
                 p.log.append(['US10','WIFE',[id,K_mar,wid,Kf(wbir)]])
 
-def us38_list_upcoming_birthdays(p):
+def us38_list_upcoming_birthdays(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
+    id1 = []
+    todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
+    todays_date = todays_date.date()
     for id, v in p.indi.items():
         birth = v.get('BIRT')
         name = v.get('NAME')
         if birth is not None:
             birthday = K(birth).date()
-            todays_date = datetime.today().date()
+            
             check_birth=(birthday-todays_date).days%yd < md
             if check_birth is True:
                 x.add_row([id,name,birth])
+                id1.append(id)
     p.log.append(['US38','BIRT',[x]])
+    return id1
 
-def us39_list_upcoming_anniversary(p):
+
+def us39_list_upcoming_anniversary(p, todays_date):
     x = PrettyTable(["ID","Husband","Wife","Anniversary"])
+    id2 = []
+    todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
+    todays_date = todays_date.date()
+
     for id, v in p.fam.items():
         marriage = v.get('MARR')
         hid = v.get('HUSB')
@@ -221,11 +241,13 @@ def us39_list_upcoming_anniversary(p):
         wname = p.indi[wid].get('NAME')
         if marriage is not None:
             anniversary_date =K(marriage).date()
-            todays_date=datetime.today().date()
+            # todays_date=datetime.today().date()
             check_anniversary=(anniversary_date-todays_date).days%yd < md
             if check_anniversary is True:
                 x.add_row([id,hname, wname, marriage])
+                id2.append(id)
     p.log.append(['US39','ANNI',[x]])
+    return id2
 
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
@@ -234,16 +256,16 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us01_check_before_today(p)
     us02_birth_before_marriage(p)
     us03_birth_before_death(p)
-    us35_birth_inlast_30days(p)
-    us36_death_inlast_30days(p)
+    us35_birth_inlast_30days(p, today)
+    us36_death_inlast_30days(p, today)
     us04_marriage_before_divorce(p)
     us05_marriage_before_death(p)
     us07_150_years_old(p)
     us08_birth_when_parent_married(p)
     us09_birth_before_parent_death(p)
     us10_marriage_after_14(p)
-    us38_list_upcoming_birthdays(p)
-    us39_list_upcoming_anniversary(p)
+    us38_list_upcoming_birthdays(p, today)
+    us39_list_upcoming_anniversary(p, today)
     return p
 
 if __name__ == '__main__':
