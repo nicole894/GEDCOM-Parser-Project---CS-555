@@ -247,7 +247,7 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     return p
 
 if __name__ == '__main__':
-    p=main('GEDCOM_File_goodOne.ged')
+    p=main('GEDCOM_File_withErrors.ged')
     p.log.sort(key=lambda x:x[0])
     print("INFO: Individual Table:")
     U.print_indi(p.indi)

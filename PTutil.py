@@ -38,8 +38,8 @@ log_func={
     ("US09","WIFE"): lambda x: f"US09: FAM: {x[0]}: This child ({x[3]}) was born on {x[4]} before Wife's ({x[1]}) Death {x[2]}.",
     ("US09","HUSB"): lambda x: f"US09: FAM: {x[0]}: This child ({x[3]}) was born on {x[4]} over 9 months after Husband's({x[1]}) Death {x[2]}.",    
 
-    ("US10","HUSB"): lambda x: f"US04: FAM: {x[0]}: Marriage Date {x[1]} is before Husband's ({x[2]}) 14's Birthday.",
-    ("US10","WIFE"): lambda x: f"US04: FAM: {x[0]}: Marriage Date {x[1]} is before WIFE's ({x[2]}) 14's Birthday.",
+    ("US10","HUSB"): lambda x: f"US10: FAM: {x[0]}: Marriage Date {x[1]} is before Husband's ({x[2]}) 14's Birthday.",
+    ("US10","WIFE"): lambda x: f"US10: FAM: {x[0]}: Marriage Date {x[1]} is before WIFE's ({x[2]}) 14's Birthday.",
 
     ("US21","HUSB"): lambda x: f"US21: FAM: {x[0]}: Husband ({x[1]}) has incorrect gender",
     ("US21","WIFE"): lambda x: f"US21: FAM: {x[0]}: Wife ({x[1]}) has incorrect gender",
