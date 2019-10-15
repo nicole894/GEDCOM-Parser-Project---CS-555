@@ -10,7 +10,6 @@ class TestUS(unittest.TestCase):
 
     def run_test(self,_test):
         x = None
-        print(self.p.log)
         logs = [i for i in self.p.log if i[0]==_test]
         count=len(logs)
         if _test in self.__INFO__:
