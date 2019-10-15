@@ -53,13 +53,21 @@ class TestUS(unittest.TestCase):
             a = record[2];
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
-        
+
     def test_US21(self):
-        self.run_test('US21')
-        
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0] == 'US21']
+            self.assertIn(['US21', 'WIFE', ['@F4@', '@I4@']], logs)
+        else:
+            self.run_test('US21')
+
     def test_US22(self):
-        self.run_test('US22')
-        
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0] == 'US22']
+            self.assertIn(['US22', 'INDI', ['@I1@']], logs)
+        else:
+            self.run_test('US22')
+
     def test_US35(self):
         expected_id = ['@I23@']
         q = P.Parser()
@@ -113,10 +121,17 @@ class TestUS(unittest.TestCase):
         self.assertEqual(expected_id, generated_id)
 
     def test_US08(self):
-        self.run_test('US08')
-        
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0] == 'US08']
+            self.assertIn(['US08', 'BBPM', ['@F3@', '2020-02-14', '@I10@', '2002-04-04']], logs)
+        else:
+            self.run_test('US08')
+
     def test_US09(self):
-        self.run_test('US09')
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            self.run_test('US09')
+        else:
+            self.run_test('US09')
         
     def test_US10(self):
         expected_id = ['@F10@']
