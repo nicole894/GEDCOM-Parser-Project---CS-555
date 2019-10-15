@@ -6,7 +6,9 @@ class TestUS(unittest.TestCase):
     __ALL__=["US01","US02","US03","US21","US22","US35","US36","US42",
              "US04","US05","US07","US08","US09","US10","US38","US39"]
     __INFO__=["US35", "US36", "US38", "US39"]
-    p=D.main('GEDCOM_File_goodOne.ged')
+    _path = 'GEDCOM_File_withErrors.ged'
+    D.today ='15 OCT 2019'
+    p=D.main(_path)
 
     def run_test(self,_test):
         x = None
@@ -31,9 +33,17 @@ class TestUS(unittest.TestCase):
     def test_US03(self):
         self.run_test('US03')
     def test_US21(self):
-        self.run_test('US21')
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US21']
+            self.assertIn(['US21', 'WIFE',['@F4@', '@I4@']], logs)
+        else:
+            self.run_test('US21')
     def test_US22(self):
-        self.run_test('US22')
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US22']
+            self.assertIn(['US22', 'INDI',['@I1@']], logs)
+        else:
+            self.run_test('US22')
     def test_US35(self):
         self.run_test('US35')
     def test_US36(self):
@@ -47,9 +57,16 @@ class TestUS(unittest.TestCase):
     def test_US07(self):
         self.run_test('US07')
     def test_US08(self):
-        self.run_test('US08')
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US08']
+            self.assertIn(['US08', 'BBPM',['@F3@', '2020-02-14', '@I10@', '2002-04-04']], logs)
+        else:
+            self.run_test('US08')
     def test_US09(self):
-        self.run_test('US09')
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            self.run_test('US09')
+        else:
+            self.run_test('US09')
     def test_US10(self):
         self.run_test('US10')
     def test_US38(self):

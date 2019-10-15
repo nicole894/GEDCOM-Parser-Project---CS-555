@@ -5,20 +5,20 @@ import PTutil as U
 import GParser as P
 # assert U.api_version >= P.api_version, "Parser is incompatible with api version of PTutil."
 md=30.4;yd=365.25
-
+today='today'
 
 def convert_str_date(date):
     datetime_object = datetime.strptime(date, '%d %b %Y')
     return datetime_object
 
-def check_date1_before_date2(date1, date2='today'):
+def check_date1_before_date2(date1, date2=today):
     if None in [date1, date2]:
         return None
     date1 = (date1 == 'today') and datetime.today() or convert_str_date(date1)
     date2 = (date2 == 'today') and datetime.today() or convert_str_date(date2)
     return date1 < date2
 
-def date_in_n_days_from_today(date,n, td='today', both=True):
+def date_in_n_days_from_today(date,n, td=today, both=True):
     if None in [date, td]:
         return None
     else:
@@ -204,9 +204,9 @@ def us38_list_upcoming_birthdays(p):
         birth = v.get('BIRT')
         name = v.get('NAME')
         if birth is not None:
-            birthday = K(birth).date()
-            todays_date = datetime.today().date()
-            check_birth=(birthday-todays_date).days%yd < md
+            bd=K(birth).date()
+            td=datetime.today().date()
+            check_birth=(bd-td).days%yd < md
             if check_birth is True:
                 x.add_row([id,name,birth])
     p.log.append(['US38','BIRT',[x]])
@@ -214,20 +214,20 @@ def us38_list_upcoming_birthdays(p):
 def us39_list_upcoming_anniversary(p):
     x = PrettyTable(["ID","Husband","Wife","Anniversary"])
     for id, v in p.fam.items():
-        marriage = v.get('MARR')
+        mar = v.get('MARR')
         hid = v.get('HUSB')
         hname = p.indi[hid].get('NAME')
         wid = v.get('WIFE')
         wname = p.indi[wid].get('NAME')
-        if marriage is not None:
-            anniversary_date =K(marriage).date()
-            todays_date=datetime.today().date()
-            check_anniversary=(anniversary_date-todays_date).days%yd < md
+        if mar is not None:
+            ad=K(mar).date()
+            td=datetime.today().date()
+            check_anniversary=(ad-td).days%yd < md
             if check_anniversary is True:
-                x.add_row([id,hname, wname, marriage])
+                x.add_row([id,hname, wname, mar])
     p.log.append(['US39','ANNI',[x]])
 
-def main(path = "GEDCOM_File_withErrors.ged"):
+def main(path = "GEDCOM_File.ged"):
     p=P.Parser()
     p.main(path)
     us21_correct_gender(p)
@@ -247,7 +247,7 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     return p
 
 if __name__ == '__main__':
-    p=main('GEDCOM_File_goodOne.ged')
+    p=main()
     p.log.sort(key=lambda x:x[0])
     print("INFO: Individual Table:")
     U.print_indi(p.indi)
