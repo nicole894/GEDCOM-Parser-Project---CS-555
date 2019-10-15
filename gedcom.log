@@ -19,7 +19,7 @@ INFO : Individual Table
 | @I15@ |   Dylan /Marshall/   |   M    | 1993-08-20 |  26 |  True |     NA     |  @F9@ |      ['@F8@']     |
 | @I16@ |    Frank /Dunphy/    |   M    | 1945-07-12 |  74 |  True |     NA     |   NA  | ['@F7@', '@F10@'] |
 | @I17@ |  Lorraine /Dunphy/   |   F    | 1955-09-10 |  64 |  True |     NA     |   NA  |     ['@F10@']     |
-| @I18@ |    Grace /Dunphy/    |   F    | 1948-06-07 |  72 | False | 2020-12-20 |   NA  |      ['@F7@']     |
+| @I18@ |    Grace /Dunphy/    |   F    | 1948-06-07 |  6  | False | 1954-12-20 |   NA  |      ['@F7@']     |
 | @I19@ |    Merle /Tucker/    |   M    | 1945-04-18 |  74 |  True |     NA     |   NA  |      ['@F5@']     |
 | @I20@ |    Barb /Tucker/     |   F    | 1945-11-24 |  73 |  True |     NA     |   NA  |      ['@F5@']     |
 | @I21@ |    Ben /Marshall/    |   M    | 1968-10-20 |  50 |  True |     NA     |   NA  |      ['@F9@']     |
@@ -45,20 +45,19 @@ INFO : Family Table
 ERROR : US22: INDI: @I1@: Individual already exists
 ERROR : US42: INDI: @I6@: Illegitimate date for Birth Date 32 FEB 1968
 ERROR : US42: INDI: @I19@: Illegitimate date for Death Date 43 JUN 2004
-ERROR : US42: FAM: @F1@: Illegitimate date for Marraige Date 32 AUG 2008
+ERROR : US42: FAM: @F1@: Illegitimate date for Marriage Date 32 AUG 2008
 ERROR : US21: FAM: @F4@: Wife (@I4@) has incorrect gender
 ERROR : US01 : INDI : @I2@ : Birth Date 12 DEC 2020 is before today's date.
 ERROR : US01 : INDI : @I6@ : Birth Date is not known 
 ERROR : US01 : INDI : @I9@ : Birth Date 31 DEC 2021 is before today's date.
-ERROR : US01 : INDI : @I18@ : Death Date 20 DEC 2020 is before today's date.
 ERROR : US01 : FAM : @F1@ : Marriage Date is not known 
 ERROR : US01 : FAM : @F2@ : Divorce Date 17 JUL 2020 is before today's date.
 ERROR : US01 : FAM : @F3@ : Marriage Date 14 FEB 2020 is before today's date.
-WARNING : US02 : FAM : @F1@ : Marriage date is not known
-ERROR : US02 : FAM : @F2@ : Wife's (@I9@) Birth Date 31 DEC 2021 is after Marriage Date 6 JUN 1968 
-ERROR : US02 : FAM : @F3@ : Wife's (@I2@) Birth Date 12 DEC 2020 is after Marriage Date 14 FEB 2020 
-ERROR : US02 : FAM : @F6@ : Husband's Birth Date is not known 
+ERROR : US02 : FAM : @F2@ : Marriage Date 1968-06-06 is before Wife's (@I9@) birthdate 2021-12-31
+ERROR : US02 : FAM : @F3@ : Marriage Date 2020-02-14 is before Wife's (@I2@) birthdate 2020-12-12
 ERROR : US03 : INDI : @I9@ : Death Date 2019-09-29 is before Birth Date 2021-12-31 
+ERROR : US04 : FAM : @F3@ : Divorce Date 2006-10-04 is before Marriage Date 2020-02-14
+ERROR : US05 : FAM : @F7@ : In Family (@F7@), Marriage Date 2017-02-15 is after Wife's (@I18@) Death 1954-12-20
 INFO :  US35: INDI: List all birthdays in the last 30 days 
  +-------+-----------------+-------------+
 |   ID  |       Name      |   Birthday  |
