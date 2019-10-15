@@ -1,13 +1,13 @@
-INFO : Individual Table 
- +-------+----------------------+--------+------------+-----+-------+------------+-------+-------------------+
+INFO: Individual Table:
++-------+----------------------+--------+------------+-----+-------+------------+-------+-------------------+
 |   ID  |         Name         | Gender |  Birthday  | Age | Alive |   Death    | Child |       Spouse      |
 +-------+----------------------+--------+------------+-----+-------+------------+-------+-------------------+
-|  @I1@ |   Jay /Pritchett/    |   M    | 1903-01-02 | 116 |  True |     NA     |   NA  |  ['@F1@', '@F2@'] |
+|  @I1@ |   Jay /Pritchett/    |   M    | 1703-01-02 | 316 |  True |     NA     |   NA  |  ['@F1@', '@F2@'] |
 |  @I2@ |  Gloria /Pritchett/  |   F    | 2020-12-12 |  -2 |  True |     NA     |   NA  |  ['@F1@', '@F3@'] |
 |  @I3@ | Mitchell /Pritchett/ |   M    | 1975-08-09 |  44 |  True |     NA     |  @F2@ |      ['@F4@']     |
 |  @I4@ |   Cameron /Tucker/   |   M    | 1972-02-29 |  47 |  True |     NA     |  @F5@ |      ['@F4@']     |
 |  @I5@ |  Claire /Pritchett/  |   F    | 1969-11-11 |  49 |  True |     NA     |  @F2@ |      ['@F6@']     |
-|  @I6@ |    Phil /Dunphy/     |   M    |    N-A     |  NA |  True |     NA     |  @F7@ |      ['@F6@']     |
+|  @I6@ |    Phil /Dunphy/     |   M    |     NA     |  NA | False |     NA     |  @F7@ |      ['@F6@']     |
 |  @I7@ |   Joe /Pritchett/    |   M    | 2013-01-16 |  6  |  True |     NA     |  @F1@ |         NA        |
 |  @I8@ |   Javier /Delgado/   |   M    | 1969-05-10 |  50 |  True |     NA     |   NA  |      ['@F3@']     |
 |  @I9@ |   Dede /Prichett/    |   F    | 2021-12-31 |  -3 | False | 2019-09-29 |   NA  |      ['@F2@']     |
@@ -27,46 +27,68 @@ INFO : Individual Table
 | @I23@ |   Jake /Marshall/    |   M    | 2019-09-29 |  0  |  True |     NA     |  @F8@ |         NA        |
 | @I24@ |     Jack /Smith/     |   M    | 2013-09-18 |  2  | False | 2016-04-04 |  @F8@ |         NA        |
 +-------+----------------------+--------+------------+-----+-------+------------+-------+-------------------+
-INFO : Family Table 
- +-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
+INFO: Family Table:
++-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
 |   ID  |  Married   |  Divorced  | Husband ID |     Husband Name     | Wife ID |     Wife Name      |           Children          |
 +-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
-|  @F1@ |    N-A     |     NA     |    @I1@    |   Jay /Pritchett/    |   @I2@  | Gloria /Pritchett/ |           ['@I7@']          |
+|  @F1@ |     NA     |     NA     |    @I1@    |   Jay /Pritchett/    |   @I2@  | Gloria /Pritchett/ |           ['@I7@']          |
 |  @F2@ | 1968-06-06 | 2020-07-17 |    @I1@    |   Jay /Pritchett/    |   @I9@  |  Dede /Prichett/   |       ['@I3@', '@I5@']      |
 |  @F3@ | 2020-02-14 | 2006-10-04 |    @I8@    |   Javier /Delgado/   |   @I2@  | Gloria /Pritchett/ |          ['@I10@']          |
 |  @F4@ | 2005-06-08 |     NA     |    @I3@    | Mitchell /Pritchett/ |   @I4@  |  Cameron /Tucker/  |          ['@I11@']          |
-|  @F5@ | 1970-05-09 |     NA     |   @I19@    |    Merle /Tucker/    |  @I20@  |   Barb /Tucker/    |           ['@I4@']          |
+|  @F5@ | 1970-11-09 |     NA     |   @I19@    |    Merle /Tucker/    |  @I20@  |   Barb /Tucker/    |           ['@I4@']          |
 |  @F6@ | 1992-01-13 |     NA     |    @I6@    |    Phil /Dunphy/     |   @I5@  | Claire /Pritchett/ | ['@I12@', '@I13@', '@I14@'] |
 |  @F7@ | 2017-02-15 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I18@  |   Grace /Dunphy/   |           ['@I6@']          |
 |  @F8@ | 2019-05-13 |     NA     |   @I15@    |   Dylan /Marshall/   |  @I14@  |   Haley /Dunphy/   |          ['@I23@']          |
-|  @F9@ | 1992-01-05 |     NA     |   @I21@    |    Ben /Marshall/    |  @I22@  | Farrah /Marshall/  |          ['@I15@']          |
+|  @F9@ | 1992-11-05 |     NA     |   @I21@    |    Ben /Marshall/    |  @I22@  | Farrah /Marshall/  |          ['@I15@']          |
 | @F10@ | 1966-01-06 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I17@  | Lorraine /Dunphy/  |              NA             |
 +-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
-ERROR : US22: INDI: @I1@: Individual already exists
-ERROR : US42: INDI: @I6@: Illegitimate date for Birth Date 32 FEB 1968
-ERROR : US42: INDI: @I19@: Illegitimate date for Death Date 43 JUN 2004
-ERROR : US42: FAM: @F1@: Illegitimate date for Marriage Date 32 AUG 2008
-ERROR : US21: FAM: @F4@: Wife (@I4@) has incorrect gender
-ERROR : US01 : INDI : @I2@ : Birth Date 12 DEC 2020 is before today's date.
-ERROR : US01 : INDI : @I6@ : Birth Date is not known 
-ERROR : US01 : INDI : @I9@ : Birth Date 31 DEC 2021 is before today's date.
-ERROR : US01 : FAM : @F1@ : Marriage Date is not known 
-ERROR : US01 : FAM : @F2@ : Divorce Date 17 JUL 2020 is before today's date.
-ERROR : US01 : FAM : @F3@ : Marriage Date 14 FEB 2020 is before today's date.
-ERROR : US02 : FAM : @F2@ : Marriage Date 1968-06-06 is before Wife's (@I9@) birthdate 2021-12-31
-ERROR : US02 : FAM : @F3@ : Marriage Date 2020-02-14 is before Wife's (@I2@) birthdate 2020-12-12
-ERROR : US03 : INDI : @I9@ : Death Date 2019-09-29 is before Birth Date 2021-12-31 
-ERROR : US04 : FAM : @F3@ : Divorce Date 2006-10-04 is before Marriage Date 2020-02-14
-ERROR : US05 : FAM : @F7@ : In Family (@F7@), Marriage Date 2017-02-15 is after Wife's (@I18@) Death 1954-12-20
-INFO :  US35: INDI: List all birthdays in the last 30 days 
+ERROR: US01: INDI: @I2@: Birth Date 2020-12-12 is after today's date
+ERROR: US01: INDI: @I6@: Birth Date is not known
+ERROR: US01: INDI: @I9@: Birth Date 2021-12-31 is after today's date
+ERROR: US01: FAM: @F1@: Marriage Date is not known
+ERROR: US01: FAM: @F2@: Divorce Date 2020-07-17 is after today's date.
+ERROR: US01: FAM: @F3@: Marriage Date 2020-02-14 is after today's date
+ERROR: US02: FAM: @F1@: Marriage Date is not known
+ERROR: US02: FAM: @F2@: Wife's (@I9@) Birth Date 2021-12-31 is after Marriage Date 1968-06-06
+ERROR: US02: FAM: @F3@: Wife's (@I2@) Birth Date 2020-12-12 is after Marriage Date 2020-02-14
+ERROR: US02: FAM: @F6@: Husband's Birth Date is not known
+ERROR: US03: INDI: @I6@: Birth Date is not known
+ERROR: US03: INDI: @I9@: Birth Date 2021-12-31 is after Death Date 2019-09-29
+ERROR: US04: FAM: @F3@: Marriage Date 2020-02-14 is after Divorce Date 2006-10-04
+ERROR: US05: FAM: @F7@: Marriage Date 2017-02-15 is after Wife's (@I18@) Death Date 1954-12-20
+ERROR: US07: INDI: @I1@: This Person's Birth Date is 1703-01-02 and is over 150 years old.
+ERROR: US08: FAM: @F3@: This child (@I10@) was born on 2002-04-04 before Parent's Marriage 2020-02-14.
+ERROR: US10: FAM: @F10@: Marriage Date 1966-01-06 is before WIFE's (@I17@) 14's Birthday.
+ERROR: US21: FAM: @F4@: Wife (@I4@) has incorrect gender
+ERROR: US22: INDI: @I1@: Individual already exists
+INFO: US35: INDI: List all birthdays in the last 30 days 
  +-------+-----------------+-------------+
 |   ID  |       Name      |   Birthday  |
 +-------+-----------------+-------------+
 | @I23@ | Jake /Marshall/ | 29 SEP 2019 |
 +-------+-----------------+-------------+
-INFO :  US36: INDI: List all deaths in the last 30 days 
+INFO: US36: INDI: List all deaths in the last 30 days 
  +------+-----------------+-------------+
 |  ID  |       Name      |    Death    |
 +------+-----------------+-------------+
 | @I9@ | Dede /Prichett/ | 29 SEP 2019 |
 +------+-----------------+-------------+
+INFO: US38: INDI: List all upcoming birthdays
+ +-------+--------------------+-------------+
+|   ID  |        Name        |   Birthday  |
++-------+--------------------+-------------+
+|  @I5@ | Claire /Pritchett/ | 11 NOV 1969 |
+| @I21@ |   Ben /Marshall/   | 20 OCT 1968 |
++-------+--------------------+-------------+
+INFO: US39: INDI: List all upcoming anniversaries
+ +------+----------------+-------------------+-------------+
+|  ID  |    Husband     |        Wife       | Anniversary |
++------+----------------+-------------------+-------------+
+| @F5@ | Merle /Tucker/ |   Barb /Tucker/   |  9 NOV 1970 |
+| @F9@ | Ben /Marshall/ | Farrah /Marshall/ |  5 NOV 1992 |
++------+----------------+-------------------+-------------+
+ERROR: US42: INDI: @I6@: Illegitimate date for Birth Date 32 FEB 1968
+ERROR: US42: INDI: @I19@: Illegitimate date for Death Date 43 JUN 2004
+ERROR: US42: FAM: @F1@: Illegitimate date for Marraige Date 32 AUG 2008
+
+Process finished with exit code 0
