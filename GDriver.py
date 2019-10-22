@@ -208,6 +208,36 @@ def us10_marriage_after_14(p):
             if N(mar, 14*yd, wbir):
                 p.log.append(['US10','WIFE',[id,K_mar,wid,Kf(wbir)]])
 
+def us12_parent_not_too_old(p):
+    for id, v in p.fam.items():
+        hid = p.fam[id]['HUSB']
+        hbir=p.indi[hid].get('BIRT')
+        wid=v.get('WIFE')
+        wbir=p.indi[wid].get('BIRT')
+        kids = v.get('CHIL',[])
+        for kid in kids:
+            kbr = p.indi[kid].get('BIRT')
+            if kbr is not None:
+                if N(kbr, 60*yd, wbir, False) is False:
+                    p.log.append(['US12','WIFE',[id,wid,Kf(wbir),kid,Kf(kbr)]])
+                if N(kbr, 80*yd, hbir, False) is False:
+                    p.log.append(['US12','HUSB',[id,hid,Kf(hbir),kid,Kf(kbr)]])
+
+def us13_sibling_spacing(p):
+    def spacing(date1,date2):
+        if None in [date1, date2]:
+            return None
+        if C(date1,date2):
+            return spacing(date2,date1)
+        return N(date1,8*md,date2) and not N(date1,1,date2)
+    for id, v in p.fam.items():
+        kids = v.get('CHIL',[])
+        kbrs = [p.indi[i].get('BIRT') for i in kids]
+        for i in range(len(kids)-1):
+            for j in range(i+1, len(kids)):
+                if spacing(kbrs[i],kbrs[j]):
+                    p.log.append(['US13', 'SPAC',[id,kids[i],Kf(kbrs[i]),kids[j],Kf(kbrs[j])]])                
+                
 def us38_list_upcoming_birthdays(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
     id1 = []
@@ -264,6 +294,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us08_birth_when_parent_married(p)
     us09_birth_before_parent_death(p)
     us10_marriage_after_14(p)
+    us12_parent_not_too_old(p)
+    us13_sibling_spacing(p)
     us38_list_upcoming_birthdays(p, today)
     us39_list_upcoming_anniversary(p, today)
     return p
