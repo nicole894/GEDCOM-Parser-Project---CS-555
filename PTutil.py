@@ -40,6 +40,11 @@ log_func={
 
     ("US10","HUSB"): lambda x: f"US10: FAM: {x[0]}: Marriage Date {x[1]} is before Husband's ({x[2]}) 14's Birthday.",
     ("US10","WIFE"): lambda x: f"US10: FAM: {x[0]}: Marriage Date {x[1]} is before WIFE's ({x[2]}) 14's Birthday.",
+    
+    ("US12","HUSB"): lambda x: f"US12: FAM: {x[0]}: Husband ({x[1]}):{x[2]} is too old when ({x[3]}):{x[4]} is born.",
+    ("US12","WIFE"): lambda x: f"US12: FAM: {x[0]}: Wife ({x[1]}):{x[2]} is too old when ({x[3]}):{x[4]} is born.",
+
+    ("US13","SPAC"): lambda x: f"US13: FAM: {x[0]}: Kid#1 {x[1]} born on {x[2]} has not proper spacing with kid#2 {x[3]} born on {x[4]}.",
 
     ("US21","HUSB"): lambda x: f"US21: FAM: {x[0]}: Husband ({x[1]}) has incorrect gender",
     ("US21","WIFE"): lambda x: f"US21: FAM: {x[0]}: Wife ({x[1]}) has incorrect gender",
