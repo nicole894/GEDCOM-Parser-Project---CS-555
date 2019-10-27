@@ -6,25 +6,25 @@ import GParser as P
 D.today = '15 OCT 2019'
 
 class TestUS(unittest.TestCase):
-    __ALL__=["US01","US02","US03","US21","US22","US35","US36","US42",
-             "US04","US05","US07","US08","US09","US10","US38","US39"]
-    __INFO__=["US35", "US36", "US38", "US39"]
-    _path='GEDCOM_File_withErrors.ged'
+    __ALL__ = ["US01", "US02", "US03", "US21", "US22", "US35", "US36", "US42", "US04", "US05", "US07", "US08", "US09",
+               "US10", "US38", "US39"]
+    __INFO__ = ["US35", "US36", "US38", "US39"]
+    _path = 'GEDCOM_File_withErrors.ged'
     p = D.main(_path)
 
-    def run_test(self,_test):
+    def run_test(self, _test):
         x = None
-        logs = [i for i in self.p.log if i[0]==_test]
-        count=len(logs)
+        logs = [i for i in self.p.log if i[0] == _test]
+        count = len(logs)
         if _test in self.__INFO__:
             # if count==1:
             #     print(f"{_test} Output: \n{logs[0][2][0]}")
-            self.assertEqual(count, 1,f"{_test}: This test should always generate an INFO.")
+            self.assertEqual(count, 1, f"{_test}: This test should always generate an INFO.")
         else:
             if count:
-                x = PrettyTable(["Test","Case","Spec"])
+                x = PrettyTable(["Test", "Case", "Spec"])
                 for i in self.p.log:
-                    if i[0]==_test:
+                    if i[0] == _test:
                         x.add_row(i)
             self.assertEqual(count, 0, f"{_test}: There is {count} error found in GEDCOM file:\n{x}")
 
@@ -153,11 +153,28 @@ class TestUS(unittest.TestCase):
         self.assertEqual(expected_id, generated_id)
        
     def test_US39(self):
-        expected_id = ['@F5@','@F9@']
+        expected_id = ['@F9@']
         q = P.Parser()
-        
         fix_date = D.today 
         generated_id = us39_list_upcoming_anniversary(q, fix_date)
+        self.assertEqual(expected_id, generated_id)
+
+    def test_US06(self):
+        expected_id = ['@F2@', '@F11@'];
+        generated_id = []
+        log = [i for i in self.p.log if i[0] == 'US06']
+        for record in log:
+            a = record[2];
+            generated_id.append(a[0])
+        self.assertEqual(expected_id, generated_id)
+
+    def test_US15(self):
+        expected_id = ['@F11@'];
+        generated_id = []
+        log = [i for i in self.p.log if i[0] == 'US15']
+        for record in log:
+            a = record[2];
+            generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
 
 if __name__ == '__main__':

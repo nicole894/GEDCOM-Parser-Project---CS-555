@@ -61,7 +61,10 @@ log_func={
     ("US42","BIRT"): lambda x: f"US42: INDI: {x[0]}: Illegitimate date for Birth Date {x[1]}",
     ("US42","DEAT"): lambda x: f"US42: INDI: {x[0]}: Illegitimate date for Death Date {x[1]}",
     ("US42","MARR"): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Marraige Date {x[1]}",
-    ("US42","DIV" ): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Divorce Date {x[1]}"
+    ("US42","DIV" ): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Divorce Date {x[1]}",
+    ("US06","WIFE" ): lambda x: f"US06: FAM: {x[0]}: Wife's ({x[1]}) Death date {x[2]} is before Divorce Date {x[3]}",
+    ("US06","HUSB" ): lambda x: f"US06: FAM: {x[0]}: Husband's ({x[1]}) Death date {x[2]}  is before Divorce Date {x[3]}",
+    ("US15","FAM" ): lambda x: f"US15: FAM: {x[0]}: Family ({x[0]}) has more than 14 siblings {x[1]}"
     }
 
 def date_format(date_list):

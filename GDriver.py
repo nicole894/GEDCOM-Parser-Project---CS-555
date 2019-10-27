@@ -36,10 +36,10 @@ def date_in_n_days_from_today(date,n, td= today, both=True):
                 return date <= nd
             return td <= date and date <= nd
 
-K=convert_str_date
-Kf=lambda date:K(date).strftime("%Y-%m-%d")
-C=check_date1_before_date2
-N=date_in_n_days_from_today
+K = convert_str_date
+Kf = lambda date:K(date).strftime("%Y-%m-%d")
+C = check_date1_before_date2
+N = date_in_n_days_from_today
 #=============================================================================#
 def us21_correct_gender(p):
     for id, v in p.fam.items():
@@ -279,6 +279,30 @@ def us39_list_upcoming_anniversary(p, todays_date):
     p.log.append(['US39','ANNI',[x]])
     return id2
 
+def us06_divorce_before_death(p):
+    for id, v in p.fam.items():
+        div = v.get('DIV')
+        if div is not None:
+            husband_id = v.get('HUSB')
+            wife_id = v.get('WIFE')
+            husband_death = p.indi[husband_id].get('DEAT')
+            wife_death = p.indi[wife_id].get('DEAT')
+            check_wife = C(div, wife_death)
+            if check_wife is False:
+                p.log.append(['US06', 'WIFE', [id, wife_id, Kf(wife_death), Kf(div)]])
+            check_husband = C(div, husband_death)
+            if check_husband is False:
+                p.log.append(['US06', 'HUSB', [id, wife_id, Kf(husband_death), Kf(div)]])
+
+def us15_less_than_15_siblings(p):
+    for id, v in p.fam.items():
+        siblings_list = v.get('CHIL')
+        if siblings_list is not None:
+            siblings = len(siblings_list)
+            if siblings > 14:
+                p.log.append(['US15', 'FAM', [id, siblings_list]])
+
+
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
     p.main(path)
@@ -298,6 +322,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us13_sibling_spacing(p)
     us38_list_upcoming_birthdays(p, today)
     us39_list_upcoming_anniversary(p, today)
+    us06_divorce_before_death(p)
+    us15_less_than_15_siblings(p)
     return p
 
 if __name__ == '__main__':
