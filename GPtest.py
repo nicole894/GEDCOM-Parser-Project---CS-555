@@ -130,7 +130,8 @@ class TestUS(unittest.TestCase):
 
     def test_US09(self):
         if self._path == 'GEDCOM_File_withErrors.ged':
-            self.run_test('US09')
+            logs = [i for i in self.p.log if i[0] == 'US09']
+            self.assertIn(['US09', 'WIFE', ['@F7@', '@I18@', '1954-12-20', '@I8@', '10 MAY 1969']], logs)
         else:
             self.run_test('US09')
         
@@ -143,9 +144,25 @@ class TestUS(unittest.TestCase):
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
 
+    def test_US12(self):
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US12']
+            self.assertIn(['US12', 'HUSB', ['@F1@', '@I1@', '1703-01-02', '@I7@', '2013-01-16']], logs)
+            self.assertIn(['US12', 'HUSB', ['@F2@', '@I1@', '1703-01-02', '@I3@', '1975-08-09']], logs)
+            self.assertIn(['US12', 'HUSB', ['@F2@', '@I1@', '1703-01-02', '@I5@', '1969-11-11']], logs)
+        else:
+            self.run_test('US12')
+
+    def test_US13(self):
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US13']
+            self.assertIn(['US13', 'SPAC', ['@F6@', '@I13@', '2002-11-28', '@I14@', '2002-12-10']], logs)
+        else:
+            self.run_test('US13')
+
     def test_US38(self):
         
-        expected_id = ['@I5@', '@I21@']
+        expected_id = ['@I5@', '@I21@', '@I36@']
         q = P.Parser()
        
         fix_date = D.today 
