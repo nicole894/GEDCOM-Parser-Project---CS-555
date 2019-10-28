@@ -303,6 +303,37 @@ def us15_less_than_15_siblings(p):
                 p.log.append(['US15', 'FAM', [id, siblings_list]])
 
 
+def us29_list_of_deceased(p):
+    x = PrettyTable(["ID","Name","Death"])
+    id29 = []
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        name = v.get('NAME')
+        if death is not None:            
+            x.add_row([id,name,death])
+            id29.append(id)
+    p.log.append(['US29','DEAT',[x]])
+    return id29
+
+    
+def us30_list_all_living_married_people(p):
+    x = PrettyTable(["ID","Name"])
+    id30 = []
+
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        spouse = v.get('FAMS')
+        name = v.get('NAME')
+        if death is None and spouse is not None :    
+
+            x.add_row([id,name])
+            id30.append(id)      
+
+    p.log.append(['US30','MARR',[x]])
+    return id30
+
+
+
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
     p.main(path)
@@ -324,6 +355,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us39_list_upcoming_anniversary(p, today)
     us06_divorce_before_death(p)
     us15_less_than_15_siblings(p)
+    us29_list_of_deceased(p)
+    us30_list_all_living_married_people(p)
     return p
 
 if __name__ == '__main__':
