@@ -6,7 +6,7 @@ api_version=204
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-log_level=["US35", "US36", "US38", "US39"]
+log_level=["US35", "US36", "US38", "US39","US29","US30"]
 log_func={
     ("US01","B_NA"): lambda x: f"US01: INDI: {x[0]}: Birth Date is not known",
     ("US01","BIRT"): lambda x: f"US01: INDI: {x[0]}: Birth Date {x[1]} is after today's date",
@@ -51,6 +51,9 @@ log_func={
  
     ("US22","FAM" ): lambda x: f"US22: FAM: {x[0]}: Family already exists",
     ("US22","INDI"): lambda x: f"US22: INDI: {x[0]}: Individual already exists",
+
+    ("US29","DEAT"): lambda x: f"INFO: US29: INDI: List of deceased individuals \n {x[0]}",
+    ("US30","MARR"): lambda x: f"INFO: US30: INDI: List of living married people \n {x[0]}",
 
     ("US35","BIRT"): lambda x: f"INFO: US35: INDI: List all birthdays in the last 30 days \n {x[0]}",
     ("US36","DEAT"): lambda x: f"INFO: US36: INDI: List all deaths in the last 30 days \n {x[0]}",
