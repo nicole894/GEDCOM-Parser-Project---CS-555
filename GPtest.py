@@ -1,14 +1,14 @@
 import unittest
 from prettytable import PrettyTable
 import GDriver as D
-from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people
+from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single
 import GParser as P
 D.today = '15 OCT 2019'
 
 class TestUS(unittest.TestCase):
     __ALL__ = ["US01", "US02", "US03", "US21", "US22", "US35", "US36", "US42", "US04", "US05", "US07", "US08", "US09",
-               "US10", "US38", "US39","US29","US30"]
-    __INFO__ = ["US35", "US36", "US38", "US39","US29","US30"]
+               "US10", "US38", "US39","US29","US30","US31","US23"]
+    __INFO__ = ["US35", "US36", "US38", "US39","US29","US30","US31","US23"]
     _path = 'GEDCOM_File_withErrors.ged'
     p = D.main(_path)
 
@@ -205,6 +205,22 @@ class TestUS(unittest.TestCase):
         log = [i for i in self.p.log if i[0] == 'US15']
         for record in log:
             a = record[2];
+            generated_id.append(a[0])
+        self.assertEqual(expected_id, generated_id)
+    
+    def test_US31(self):
+        expected_id = ['@I27@','@I28@','@I29@','@I30@','@I31@','@I32@','@I33@','@I34@','@I35@','@I36@','@I37@','@I38@','@I39@','@I40@','@I41@']
+        q = P.Parser()
+        
+        generated_id = us31_living_single(q)
+        self.assertEqual(expected_id, generated_id)
+
+    def test_US23(self):
+        expected_id = ['@I42@','@I43@']
+        generated_id = []
+        log = [i for i in self.p.log if i[0] == 'US23']
+        for record in log:
+            a = record[2]
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
 
