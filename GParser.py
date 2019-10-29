@@ -1,7 +1,7 @@
 
 from dateutil.parser import parse
 
-api_version=200
+api_version = 200
 
 class Parser():
     _fam = {}

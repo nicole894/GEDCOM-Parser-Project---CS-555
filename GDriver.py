@@ -36,10 +36,10 @@ def date_in_n_days_from_today(date,n, td= today, both=True):
                 return date <= nd
             return td <= date and date <= nd
 
-K=convert_str_date
-Kf=lambda date:K(date).strftime("%Y-%m-%d")
-C=check_date1_before_date2
-N=date_in_n_days_from_today
+K = convert_str_date
+Kf = lambda date:K(date).strftime("%Y-%m-%d")
+C = check_date1_before_date2
+N = date_in_n_days_from_today
 #=============================================================================#
 def us21_correct_gender(p):
     for id, v in p.fam.items():
@@ -208,6 +208,36 @@ def us10_marriage_after_14(p):
             if N(mar, 14*yd, wbir):
                 p.log.append(['US10','WIFE',[id,K_mar,wid,Kf(wbir)]])
 
+def us12_parent_not_too_old(p):
+    for id, v in p.fam.items():
+        hid = p.fam[id]['HUSB']
+        hbir=p.indi[hid].get('BIRT')
+        wid=v.get('WIFE')
+        wbir=p.indi[wid].get('BIRT')
+        kids = v.get('CHIL',[])
+        for kid in kids:
+            kbr = p.indi[kid].get('BIRT')
+            if kbr is not None:
+                if N(kbr, 60*yd, wbir, False) is False:
+                    p.log.append(['US12','WIFE',[id,wid,Kf(wbir),kid,Kf(kbr)]])
+                if N(kbr, 80*yd, hbir, False) is False:
+                    p.log.append(['US12','HUSB',[id,hid,Kf(hbir),kid,Kf(kbr)]])
+
+def us13_sibling_spacing(p):
+    def spacing(date1,date2):
+        if None in [date1, date2]:
+            return None
+        if C(date1,date2):
+            return spacing(date2,date1)
+        return N(date1,8*md,date2) and not N(date1,1,date2)
+    for id, v in p.fam.items():
+        kids = v.get('CHIL',[])
+        kbrs = [p.indi[i].get('BIRT') for i in kids]
+        for i in range(len(kids)-1):
+            for j in range(i+1, len(kids)):
+                if spacing(kbrs[i],kbrs[j]):
+                    p.log.append(['US13', 'SPAC',[id,kids[i],Kf(kbrs[i]),kids[j],Kf(kbrs[j])]])                
+                
 def us38_list_upcoming_birthdays(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
     id1 = []
@@ -249,6 +279,91 @@ def us39_list_upcoming_anniversary(p, todays_date):
     p.log.append(['US39','ANNI',[x]])
     return id2
 
+def us06_divorce_before_death(p):
+    for id, v in p.fam.items():
+        div = v.get('DIV')
+        if div is not None:
+            husband_id = v.get('HUSB')
+            wife_id = v.get('WIFE')
+            husband_death = p.indi[husband_id].get('DEAT')
+            wife_death = p.indi[wife_id].get('DEAT')
+            check_wife = C(div, wife_death)
+            if check_wife is False:
+                p.log.append(['US06', 'WIFE', [id, wife_id, Kf(wife_death), Kf(div)]])
+            check_husband = C(div, husband_death)
+            if check_husband is False:
+                p.log.append(['US06', 'HUSB', [id, wife_id, Kf(husband_death), Kf(div)]])
+
+def us15_less_than_15_siblings(p):
+    for id, v in p.fam.items():
+        siblings_list = v.get('CHIL')
+        if siblings_list is not None:
+            siblings = len(siblings_list)
+            if siblings > 14:
+                p.log.append(['US15', 'FAM', [id, siblings_list]])
+
+
+def us29_list_of_deceased(p):
+    x = PrettyTable(["ID","Name","Death"])
+    id29 = []
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        name = v.get('NAME')
+        if death is not None:            
+            x.add_row([id,name,death])
+            id29.append(id)
+    p.log.append(['US29','DEAT',[x]])
+    return id29
+
+    
+def us30_list_all_living_married_people(p):
+    x = PrettyTable(["ID","Name"])
+    id30 = []
+
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        spouse = v.get('FAMS')
+        name = v.get('NAME')
+        if death is None and spouse is not None :    
+
+            x.add_row([id,name])
+            id30.append(id)      
+
+    p.log.append(['US30','MARR',[x]])
+    return id30
+
+def us23_UniqueName_and_BirthDate(p):
+    """No more than one individual with the same name and birth date should appear in a GEDCOM file"""
+    for id, v in p.indi.items():
+        
+        name = v.get('NAME')
+        birth = v.get('BIRT')
+        
+        for id1, v1 in p.indi.items():
+            if(id!=id1):
+                if(p.indi[id].get('NAME') == p.indi[id1].get('NAME') and p.indi[id].get('BIRT') == p.indi[id1].get('BIRT')):
+                    p.log.append(['US23', 'INDI', [id, name, birth]])
+
+            
+def us31_living_single(p):
+    """List all living people over 30 who have never been married in a GEDCOM file"""
+    x = PrettyTable(["ID","Name"])
+    id5 = []
+
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        spouse = v.get('FAMS')
+        name = v.get('NAME')
+        ibirth = v.get('BIRT')
+
+        if death is None and spouse is None and N(ibirth,-30*yd, 'today', False) is False:
+            x.add_row([id,name])
+            id5.append(id)
+    p.log.append(['US31','MARR',[x]])
+    return id5
+
+
+
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
     p.main(path)
@@ -264,8 +379,16 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us08_birth_when_parent_married(p)
     us09_birth_before_parent_death(p)
     us10_marriage_after_14(p)
+    us12_parent_not_too_old(p)
+    us13_sibling_spacing(p)
     us38_list_upcoming_birthdays(p, today)
     us39_list_upcoming_anniversary(p, today)
+    us06_divorce_before_death(p)
+    us15_less_than_15_siblings(p)
+    us29_list_of_deceased(p)
+    us30_list_all_living_married_people(p)
+    us23_UniqueName_and_BirthDate(p)
+    us31_living_single(p)
     return p
 
 if __name__ == '__main__':

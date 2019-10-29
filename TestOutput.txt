@@ -15,33 +15,64 @@ INFO: Individual Table:
 | @I11@ |  Lilly /Pritchett/   |   F    | 2008-02-14 |  11 |  True |     NA     |  @F4@ |         NA        |
 | @I12@ |    Alex /Dunphy/     |   F    | 1998-03-15 |  21 |  True |     NA     |  @F6@ |         NA        |
 | @I13@ |    Luke /Dunphy/     |   M    | 2002-11-28 |  16 |  True |     NA     |  @F6@ |         NA        |
-| @I14@ |    Haley /Dunphy/    |   F    | 1993-12-10 |  25 |  True |     NA     |  @F6@ |      ['@F8@']     |
+| @I14@ |    Haley /Dunphy/    |   F    | 2002-12-10 |  16 |  True |     NA     |  @F6@ |      ['@F8@']     |
 | @I15@ |   Dylan /Marshall/   |   M    | 1993-08-20 |  26 |  True |     NA     |  @F9@ |      ['@F8@']     |
 | @I16@ |    Frank /Dunphy/    |   M    | 1945-07-12 |  74 |  True |     NA     |   NA  | ['@F7@', '@F10@'] |
 | @I17@ |  Lorraine /Dunphy/   |   F    | 1955-09-10 |  64 |  True |     NA     |   NA  |     ['@F10@']     |
 | @I18@ |    Grace /Dunphy/    |   F    | 1948-06-07 |  6  | False | 1954-12-20 |   NA  |      ['@F7@']     |
 | @I19@ |    Merle /Tucker/    |   M    | 1945-04-18 |  74 |  True |     NA     |   NA  |      ['@F5@']     |
 | @I20@ |    Barb /Tucker/     |   F    | 1945-11-24 |  73 |  True |     NA     |   NA  |      ['@F5@']     |
-| @I21@ |    Ben /Marshall/    |   M    | 1968-10-20 |  50 |  True |     NA     |   NA  |      ['@F9@']     |
+| @I21@ |    Ben /Marshall/    |   M    | 1968-10-20 |  51 |  True |     NA     |   NA  |      ['@F9@']     |
 | @I22@ |  Farrah /Marshall/   |   F    | 1968-09-15 |  51 |  True |     NA     |   NA  |      ['@F9@']     |
 | @I23@ |   Jake /Marshall/    |   M    | 2019-09-29 |  0  |  True |     NA     |  @F8@ |         NA        |
 | @I24@ |     Jack /Smith/     |   M    | 2013-09-18 |  2  | False | 2016-04-04 |  @F8@ |         NA        |
+| @I25@ |    David /Jones/     |   M    | 1934-01-12 |  39 | False | 1973-04-24 |   NA  |     ['@F11@']     |
+| @I26@ |     Kate /Jones/     |   F    | 1938-08-30 |  43 | False | 1982-03-15 |   NA  |     ['@F11@']     |
+| @I27@ |     Luke /Jones/     |   M    | 1958-07-30 |  61 |  True |     NA     | @F11@ |         NA        |
+| @I28@ |   Larissa /Jones/    |   F    | 1959-05-03 |  60 |  True |     NA     | @F11@ |         NA        |
+| @I29@ |     Kirk /Jones/     |   M    | 1960-04-16 |  59 |  True |     NA     | @F11@ |         NA        |
+| @I30@ |    Janice /Jones/    |   F    | 1961-02-06 |  58 |  True |     NA     | @F11@ |         NA        |
+| @I31@ |    Mathew /Jones/    |   M    | 1961-12-16 |  57 |  True |     NA     | @F11@ |         NA        |
+| @I32@ |   Patrick /Jones/    |   M    | 1962-09-08 |  57 |  True |     NA     | @F11@ |         NA        |
+| @I33@ |    Riley /Jones/     |   F    | 1963-07-15 |  56 |  True |     NA     | @F11@ |         NA        |
+| @I34@ |     Mary /Jones/     |   F    | 1964-04-25 |  55 |  True |     NA     | @F11@ |         NA        |
+| @I35@ |    Nathan /Jones/    |   M    | 1965-01-03 |  54 |  True |     NA     |   NA  |         NA        |
+| @I36@ |   Indiana /Jones/    |   F    | 1965-10-19 |  54 |  True |     NA     |   NA  |         NA        |
+| @I37@ |     Cruz /Jones/     |   M    | 1966-07-17 |  53 |  True |     NA     |   NA  |         NA        |
+| @I38@ |    George /Jones/    |   M    | 1967-03-21 |  52 |  True |     NA     |   NA  |         NA        |
+| @I39@ |     Lexi /Jones/     |   F    | 1967-12-29 |  51 |  True |     NA     |   NA  |         NA        |
+| @I40@ |     Dale /Jones/     |   M    | 1968-10-03 |  51 |  True |     NA     | @F11@ |         NA        |
+| @I41@ |     Frey /Jones/     |   F    | 1969-08-15 |  50 |  True |     NA     | @F11@ |         NA        |
+| @I42@ |    Namya /Jones/     |   F    | 1995-08-09 |  24 |  True |     NA     |   NA  |         NA        |
+| @I43@ |    Namya /Jones/     |   F    | 1995-08-09 |  24 |  True |     NA     |   NA  |         NA        |
 +-------+----------------------+--------+------------+-----+-------+------------+-------+-------------------+
 INFO: Family Table:
-+-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
-|   ID  |  Married   |  Divorced  | Husband ID |     Husband Name     | Wife ID |     Wife Name      |           Children          |
-+-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
-|  @F1@ |     NA     |     NA     |    @I1@    |   Jay /Pritchett/    |   @I2@  | Gloria /Pritchett/ |           ['@I7@']          |
-|  @F2@ | 1968-06-06 | 2020-07-17 |    @I1@    |   Jay /Pritchett/    |   @I9@  |  Dede /Prichett/   |       ['@I3@', '@I5@']      |
-|  @F3@ | 2020-02-14 | 2006-10-04 |    @I8@    |   Javier /Delgado/   |   @I2@  | Gloria /Pritchett/ |          ['@I10@']          |
-|  @F4@ | 2005-06-08 |     NA     |    @I3@    | Mitchell /Pritchett/ |   @I4@  |  Cameron /Tucker/  |          ['@I11@']          |
-|  @F5@ | 1970-11-09 |     NA     |   @I19@    |    Merle /Tucker/    |  @I20@  |   Barb /Tucker/    |           ['@I4@']          |
-|  @F6@ | 1992-01-13 |     NA     |    @I6@    |    Phil /Dunphy/     |   @I5@  | Claire /Pritchett/ | ['@I12@', '@I13@', '@I14@'] |
-|  @F7@ | 2017-02-15 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I18@  |   Grace /Dunphy/   |           ['@I6@']          |
-|  @F8@ | 2019-05-13 |     NA     |   @I15@    |   Dylan /Marshall/   |  @I14@  |   Haley /Dunphy/   |          ['@I23@']          |
-|  @F9@ | 1992-11-05 |     NA     |   @I21@    |    Ben /Marshall/    |  @I22@  | Farrah /Marshall/  |          ['@I15@']          |
-| @F10@ | 1966-01-06 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I17@  | Lorraine /Dunphy/  |              NA             |
-+-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------+
++-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+|   ID  |  Married   |  Divorced  | Husband ID |     Husband Name     | Wife ID |     Wife Name      |
+                            Children                                                                |
++-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
+|  @F1@ |     NA     |     NA     |    @I1@    |   Jay /Pritchett/    |   @I2@  | Gloria /Pritchett/ |
+                            ['@I7@']                                                                |
+|  @F2@ | 1968-06-06 | 2020-07-17 |    @I1@    |   Jay /Pritchett/    |   @I9@  |  Dede /Prichett/   |
+                        ['@I3@', '@I5@']                                                            |
+|  @F3@ | 2020-02-14 | 2006-10-04 |    @I8@    |   Javier /Delgado/   |   @I2@  | Gloria /Pritchett/ |
+                           ['@I10@']                                                                |
+|  @F4@ | 2005-06-08 |     NA     |    @I3@    | Mitchell /Pritchett/ |   @I4@  |  Cameron /Tucker/  |
+                           ['@I11@']                                                                |
+|  @F5@ | 1970-05-09 |     NA     |   @I19@    |    Merle /Tucker/    |  @I20@  |   Barb /Tucker/    |
+                            ['@I4@']                                                                |
+|  @F6@ | 1992-01-13 |     NA     |    @I6@    |    Phil /Dunphy/     |   @I5@  | Claire /Pritchett/ |
+                  ['@I12@', '@I13@', '@I14@']                                                       |
+|  @F7@ | 2017-02-15 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I18@  |   Grace /Dunphy/   |
+                        ['@I6@', '@I8@']                                                            |
+|  @F8@ | 2019-05-13 |     NA     |   @I15@    |   Dylan /Marshall/   |  @I14@  |   Haley /Dunphy/   |
+                           ['@I23@']                                                                |
+|  @F9@ | 1992-11-05 |     NA     |   @I21@    |    Ben /Marshall/    |  @I22@  | Farrah /Marshall/  |
+                           ['@I15@']                                                                |
+| @F10@ | 1966-01-06 |     NA     |   @I16@    |    Frank /Dunphy/    |  @I17@  | Lorraine /Dunphy/  |
+                               NA                                                                   |
+| @F11@ | 1954-11-16 | 1975-10-04 |   @I25@    |    David /Jones/     |  @I26@  |    Kate /Jones/    | ['@I27@', '@I28@', '@I29@', '@I30@', '@I31@', '@I32@', '@I33@', '@I34@', '@I35@', '@I36@', '@I37@', '@I38@', '@I39@', '@I40@', '@I41@'] |
++-------+------------+------------+------------+----------------------+---------+--------------------+-----------------------------------------------------------------------------------------------------------------------------------------+
 ERROR: US01: INDI: @I2@: Birth Date 2020-12-12 is after today's date
 ERROR: US01: INDI: @I6@: Birth Date is not known
 ERROR: US01: INDI: @I9@: Birth Date 2021-12-31 is after today's date
@@ -56,18 +87,80 @@ ERROR: US03: INDI: @I6@: Birth Date is not known
 ERROR: US03: INDI: @I9@: Birth Date 2021-12-31 is after Death Date 2019-09-29
 ERROR: US04: FAM: @F3@: Marriage Date 2020-02-14 is after Divorce Date 2006-10-04
 ERROR: US05: FAM: @F7@: Marriage Date 2017-02-15 is after Wife's (@I18@) Death Date 1954-12-20
+ERROR: US06: FAM: @F2@: Wife's (@I9@) Death date 2019-09-29 is before Divorce Date 2020-07-17
+ERROR: US06: FAM: @F11@: Husband's (@I26@) Death date 1973-04-24  is before Divorce Date 1975-10-04
 ERROR: US07: INDI: @I1@: This Person's Birth Date is 1703-01-02 and is over 150 years old.
 ERROR: US08: FAM: @F3@: This child (@I10@) was born on 2002-04-04 before Parent's Marriage 2020-02-14.
+ERROR: US08: FAM: @F7@: This child (@I8@) was born on 1969-05-10 before Parent's Marriage 2017-02-15.
+ERROR: US09: FAM: @F7@: This child (@I8@) was born on 10 MAY 1969 before Wife's (@I18@) Death 1954-12-20.
 ERROR: US10: FAM: @F10@: Marriage Date 1966-01-06 is before WIFE's (@I17@) 14's Birthday.
+ERROR: US12: FAM: @F1@: Husband (@I1@):1703-01-02 is too old when (@I7@):2013-01-16 is born.
+ERROR: US12: FAM: @F2@: Husband (@I1@):1703-01-02 is too old when (@I3@):1975-08-09 is born.
+ERROR: US12: FAM: @F2@: Husband (@I1@):1703-01-02 is too old when (@I5@):1969-11-11 is born.
+ERROR: US13: FAM: @F6@: Kid#1 @I13@ born on 2002-11-28 has not proper spacing with kid#2 @I14@ born on 2002-12-10.
+ERROR: US15: FAM: @F11@: Family (@F11@) has more than 14 siblings ['@I27@', '@I28@', '@I29@', '@I30@', '@I31@', '@I32@', '@I33@', '@I34@',
+'@I35@', '@I36@', '@I37@', '@I38@', '@I39@', '@I40@', '@I41@']
 ERROR: US21: FAM: @F4@: Wife (@I4@) has incorrect gender
 ERROR: US22: INDI: @I1@: Individual already exists
-INFO: US35: INDI: List all birthdays in the last 30 days 
+ERROR: US23: INDI: @I42@: Individual with same name and birthdate already exists
+ERROR: US23: INDI: @I43@: Individual with same name and birthdate already exists
+INFO: US29: INDI: List of deceased individuals
+ +-------+-----------------+-------------+
+|   ID  |       Name      |    Death    |
++-------+-----------------+-------------+
+|  @I9@ | Dede /Prichett/ | 29 SEP 2019 |
+| @I18@ |  Grace /Dunphy/ | 20 DEC 1954 |
+| @I24@ |   Jack /Smith/  |  4 APR 2016 |
+| @I25@ |  David /Jones/  | 24 APR 1973 |
+| @I26@ |   Kate /Jones/  | 15 MAR 1982 |
++-------+-----------------+-------------+
+INFO: US30: INDI: List of living married people
+ +-------+----------------------+
+|   ID  |         Name         |
++-------+----------------------+
+|  @I1@ |   Jay /Pritchett/    |
+|  @I2@ |  Gloria /Pritchett/  |
+|  @I3@ | Mitchell /Pritchett/ |
+|  @I4@ |   Cameron /Tucker/   |
+|  @I5@ |  Claire /Pritchett/  |
+|  @I6@ |    Phil /Dunphy/     |
+|  @I8@ |   Javier /Delgado/   |
+| @I14@ |    Haley /Dunphy/    |
+| @I15@ |   Dylan /Marshall/   |
+| @I16@ |    Frank /Dunphy/    |
+| @I17@ |  Lorraine /Dunphy/   |
+| @I19@ |    Merle /Tucker/    |
+| @I20@ |    Barb /Tucker/     |
+| @I21@ |    Ben /Marshall/    |
+| @I22@ |  Farrah /Marshall/   |
++-------+----------------------+
+INFO: US31: INDI: List all living people over 30 who have never been married
+ +-------+-----------------+
+|   ID  |       Name      |
++-------+-----------------+
+| @I27@ |   Luke /Jones/  |
+| @I28@ | Larissa /Jones/ |
+| @I29@ |   Kirk /Jones/  |
+| @I30@ |  Janice /Jones/ |
+| @I31@ |  Mathew /Jones/ |
+| @I32@ | Patrick /Jones/ |
+| @I33@ |  Riley /Jones/  |
+| @I34@ |   Mary /Jones/  |
+| @I35@ |  Nathan /Jones/ |
+| @I36@ | Indiana /Jones/ |
+| @I37@ |   Cruz /Jones/  |
+| @I38@ |  George /Jones/ |
+| @I39@ |   Lexi /Jones/  |
+| @I40@ |   Dale /Jones/  |
+| @I41@ |   Frey /Jones/  |
++-------+-----------------+
+INFO: US35: INDI: List all birthdays in the last 30 days
  +-------+-----------------+-------------+
 |   ID  |       Name      |   Birthday  |
 +-------+-----------------+-------------+
 | @I23@ | Jake /Marshall/ | 29 SEP 2019 |
 +-------+-----------------+-------------+
-INFO: US36: INDI: List all deaths in the last 30 days 
+INFO: US36: INDI: List all deaths in the last 30 days
  +------+-----------------+-------------+
 |  ID  |       Name      |    Death    |
 +------+-----------------+-------------+
@@ -78,17 +171,15 @@ INFO: US38: INDI: List all upcoming birthdays
 |   ID  |        Name        |   Birthday  |
 +-------+--------------------+-------------+
 |  @I5@ | Claire /Pritchett/ | 11 NOV 1969 |
-| @I21@ |   Ben /Marshall/   | 20 OCT 1968 |
+| @I20@ |   Barb /Tucker/    | 24 NOV 1945 |
 +-------+--------------------+-------------+
 INFO: US39: INDI: List all upcoming anniversaries
- +------+----------------+-------------------+-------------+
-|  ID  |    Husband     |        Wife       | Anniversary |
-+------+----------------+-------------------+-------------+
-| @F5@ | Merle /Tucker/ |   Barb /Tucker/   |  9 NOV 1970 |
-| @F9@ | Ben /Marshall/ | Farrah /Marshall/ |  5 NOV 1992 |
-+------+----------------+-------------------+-------------+
+ +-------+----------------+-------------------+-------------+
+|   ID  |    Husband     |        Wife       | Anniversary |
++-------+----------------+-------------------+-------------+
+|  @F9@ | Ben /Marshall/ | Farrah /Marshall/ |  5 NOV 1992 |
+| @F11@ | David /Jones/  |    Kate /Jones/   | 16 NOV 1954 |
++-------+----------------+-------------------+-------------+
 ERROR: US42: INDI: @I6@: Illegitimate date for Birth Date 32 FEB 1968
 ERROR: US42: INDI: @I19@: Illegitimate date for Death Date 43 JUN 2004
 ERROR: US42: FAM: @F1@: Illegitimate date for Marraige Date 32 AUG 2008
-
-Process finished with exit code 0
