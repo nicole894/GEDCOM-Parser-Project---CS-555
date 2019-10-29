@@ -6,7 +6,7 @@ api_version=204
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-log_level=["US35", "US36", "US38", "US39","US29","US30"]
+log_level=["US35", "US36", "US38", "US39","US29","US30","US31"]
 log_func={
     ("US01","B_NA"): lambda x: f"US01: INDI: {x[0]}: Birth Date is not known",
     ("US01","BIRT"): lambda x: f"US01: INDI: {x[0]}: Birth Date {x[1]} is after today's date",
@@ -67,7 +67,9 @@ log_func={
     ("US42","DIV" ): lambda x: f"US42: FAM: {x[0]}: Illegitimate date for Divorce Date {x[1]}",
     ("US06","WIFE" ): lambda x: f"US06: FAM: {x[0]}: Wife's ({x[1]}) Death date {x[2]} is before Divorce Date {x[3]}",
     ("US06","HUSB" ): lambda x: f"US06: FAM: {x[0]}: Husband's ({x[1]}) Death date {x[2]}  is before Divorce Date {x[3]}",
-    ("US15","FAM" ): lambda x: f"US15: FAM: {x[0]}: Family ({x[0]}) has more than 14 siblings {x[1]}"
+    ("US15","FAM" ): lambda x: f"US15: FAM: {x[0]}: Family ({x[0]}) has more than 14 siblings {x[1]}",
+    ("US31","MARR"): lambda x: f"INFO: US31: INDI: List all living people over 30 who have never been married\n {x[0]}",
+    ("US23","INDI"): lambda x: f"US23: INDI: {x[0]}: Individual with same name and birthdate already exists"
     }
 
 def date_format(date_list):
