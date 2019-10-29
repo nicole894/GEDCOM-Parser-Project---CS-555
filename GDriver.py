@@ -332,6 +332,36 @@ def us30_list_all_living_married_people(p):
     p.log.append(['US30','MARR',[x]])
     return id30
 
+def us23_UniqueName_and_BirthDate(p):
+    """No more than one individual with the same name and birth date should appear in a GEDCOM file"""
+    for id, v in p.indi.items():
+        
+        name = v.get('NAME')
+        birth = v.get('BIRT')
+        
+        for id1, v1 in p.indi.items():
+            if(id!=id1):
+                if(p.indi[id].get('NAME') == p.indi[id1].get('NAME') and p.indi[id].get('BIRT') == p.indi[id1].get('BIRT')):
+                    p.log.append(['US23', 'INDI', [id, name, birth]])
+
+            
+def us31_living_single(p):
+    """List all living people over 30 who have never been married in a GEDCOM file"""
+    x = PrettyTable(["ID","Name"])
+    id5 = []
+
+    for id, v in p.indi.items():
+        death = v.get('DEAT')
+        spouse = v.get('FAMS')
+        name = v.get('NAME')
+        ibirth = v.get('BIRT')
+
+        if death is None and spouse is None and N(ibirth,-30*yd, 'today', False) is False:
+            x.add_row([id,name])
+            id5.append(id)
+    p.log.append(['US31','MARR',[x]])
+    return id5
+
 
 
 def main(path = "GEDCOM_File_withErrors.ged"):
@@ -357,6 +387,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us15_less_than_15_siblings(p)
     us29_list_of_deceased(p)
     us30_list_all_living_married_people(p)
+    us23_UniqueName_and_BirthDate(p)
+    us31_living_single(p)
     return p
 
 if __name__ == '__main__':
