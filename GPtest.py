@@ -73,7 +73,7 @@ class TestUS(unittest.TestCase):
         expected_id = ['@I23@']
         q = P.Parser()
         
-        fix_date = D.today 
+        fix_date = D.today
         generated_id = us35_birth_inlast_30days(q, fix_date)
         self.assertEqual(expected_id, generated_id)
         

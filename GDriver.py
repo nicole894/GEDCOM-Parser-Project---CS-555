@@ -102,14 +102,14 @@ def us02_birth_before_marriage(p):
 def us35_birth_inlast_30days(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
     id3 = []
-    todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
-    todays_date = todays_date.date()
+    #todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
+    #todays_date = todays_date.date()
 
     for id, v in p.indi.items():
         birth = v.get('BIRT')
         name = v.get('NAME')
         if birth is not None:
-            check_birth = N(birth, -30)
+            check_birth = N(birth, -30, todays_date)
             if check_birth is True:
                 x.add_row([id,name,birth])
                 id3.append(id)
@@ -123,7 +123,7 @@ def us36_death_inlast_30days(p, todays_date):
         death = v.get('DEAT')
         name = v.get('NAME')
         if death is not None:
-            check_death = N(death, -30)
+            check_death = N(death, -30,todays_date)
             if check_death is True:
                 x.add_row([id,name,death])
                 id4.append(id)
