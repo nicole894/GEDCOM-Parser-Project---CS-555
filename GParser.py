@@ -120,10 +120,10 @@ class Parser():
             counter =0
             for i in content_list:
                 if int(i[0]) == 0 and len(i) == 3 and i[2] == 'INDI':
-                    data = self.create_data(counter,content_list,i[1])
+                    data = self.create_data(counter, content_list, i[1])
                     US22_unique_ids(i)
                 elif int(i[0]) == 0 and len(i) == 3 and i[2] == 'FAM':
-                    data = self.create_data(counter, content_list,i[1])
+                    data = self.create_data(counter, content_list, i[1])
                     US22_unique_ids(i)
                 counter = counter + 1
                 fp.close()
