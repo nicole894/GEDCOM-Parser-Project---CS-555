@@ -1,7 +1,7 @@
 import unittest
 from prettytable import PrettyTable
 import GDriver as D
-from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single
+from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single, us33_list_orphans
 import GParser as P
 D.today = '15 OCT 2019'
 
@@ -86,14 +86,14 @@ class TestUS(unittest.TestCase):
         self.assertEqual(expected_id, generated_id)
 
     def test_US29(self):
-        expected_id = ['@I9@','@I18@','@I24@', '@I25@', '@I26@']
+        expected_id = ['@I9@','@I18@','@I24@', '@I25@', '@I26@', '@I45@', '@I46@']
         q = P.Parser()
         
         generated_id = us29_list_of_deceased(q)
         self.assertEqual(expected_id, generated_id)
 
     def test_US30(self):
-        expected_id = ['@I1@','@I2@','@I3@', '@I4@', '@I5@','@I6@','@I8@','@I14@', '@I15@', '@I16@','@I17@','@I19@','@I20@', '@I21@', '@I22@']
+        expected_id = ['@I1@','@I2@','@I3@', '@I4@', '@I5@','@I6@','@I8@','@I14@', '@I15@', '@I16@','@I17@','@I19@','@I20@', '@I21@', '@I22@','@I44@']
         q = P.Parser()
         
         generated_id = us30_list_all_living_married_people(q)
@@ -223,6 +223,22 @@ class TestUS(unittest.TestCase):
             a = record[2]
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
+
+    def test_US26(self):
+            expected_id = ['@I44@','@I44@', '@F11@', '@F12@', '@F12@'];
+            generated_id = []
+            log = [i for i in self.p.log if i[0] == 'US26']
+            for record in log:
+                a = record[2];
+                generated_id.append(a[0])
+            self.assertEqual(expected_id, generated_id)
+
+    def test_US33(self):
+            expected_id = ['@I47@'];
+            q = P.Parser()
+            generated_id = us33_list_orphans(q)
+
+            self.assertEqual(expected_id, generated_id)
 
 if __name__ == '__main__':
     unittest.main()

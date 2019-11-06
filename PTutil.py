@@ -6,7 +6,7 @@ api_version=204
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-log_level=["US35", "US36", "US38", "US39","US29","US30","US31"]
+log_level=["US35", "US36", "US38", "US39","US29","US30","US31","US33"]
 log_func={
     ("US01","B_NA"): lambda x: f"US01: INDI: {x[0]}: Birth Date is not known",
     ("US01","BIRT"): lambda x: f"US01: INDI: {x[0]}: Birth Date {x[1]} is after today's date",
@@ -69,7 +69,13 @@ log_func={
     ("US06","HUSB" ): lambda x: f"US06: FAM: {x[0]}: Husband's ({x[1]}) Death date {x[2]}  is before Divorce Date {x[3]}",
     ("US15","FAM" ): lambda x: f"US15: FAM: {x[0]}: Family ({x[0]}) has more than 14 siblings {x[1]}",
     ("US31","MARR"): lambda x: f"INFO: US31: INDI: List all living people over 30 who have never been married\n {x[0]}",
-    ("US23","INDI"): lambda x: f"US23: INDI: {x[0]}: Individual with same name and birthdate already exists"
+    ("US23","INDI"): lambda x: f"US23: INDI: {x[0]}: Individual with same name and birthdate already exists",
+    ("US26","CHIL"): lambda x: f"US33: INDI: {x[0]}: Individual is a child in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
+    ("US26","PART"): lambda x: f"US33: INDI: {x[0]}: Individual is a spouse in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
+    ("US26","HUSB"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is the husband in family({x[0]}), but the does not exist in the Individual table",
+    ("US26","WIFE"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is the wife in family({x[0]}), but the does not exist in the Individual table",
+    ("US26","CHFA"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is a child in family({x[0]}), but the does not exist in the Individual table",
+    ("US33","INDI"): lambda x: f"INFO: US33: INDI: List all orphans. \n {x[0]}",
     }
 
 def date_format(date_list):
@@ -113,7 +119,8 @@ def print_indi(indi_dict):
 
 def print_fam(fam_dict, indi_dict):
     def get_name(indi_dict,nid):
-        return indi_dict[nid].get('NAME')
+        if nid in indi_dict:
+            return indi_dict[nid].get('NAME')
     
     x=PrettyTable(["ID","Married","Divorced","Husband ID","Husband Name","Wife ID","Wife Name","Children"])
     for k,v in fam_dict.items():
