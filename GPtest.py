@@ -1,13 +1,13 @@
 import unittest
 from prettytable import PrettyTable
 import GDriver as D
-from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single, us33_list_orphans
+from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single, us33_list_orphans, us17_no_marriages_to_children, us18_sibilings_should_not_marry
 import GParser as P
 D.today = '15 OCT 2019'
 
 class TestUS(unittest.TestCase):
     __ALL__ = ["US01", "US02", "US03", "US21", "US22", "US35", "US36", "US42", "US04", "US05", "US07", "US08", "US09",
-               "US10", "US38", "US39","US29","US30","US31","US23"]
+               "US10","US17","US18", "US38", "US39","US29","US30","US31","US23"]
     __INFO__ = ["US35", "US36", "US38", "US39","US29","US30","US31","US23"]
     _path = 'GEDCOM_File_withErrors.ged'
     p = D.main(_path)
@@ -38,7 +38,7 @@ class TestUS(unittest.TestCase):
         self.assertEqual(expected_id, generated_id)
         
     def test_US02(self):
-        expected_id = ['@F1@', '@F2@', '@F3@', '@F6@'];
+        expected_id = ['@F1@', '@F2@', '@F3@', '@F6@','@F6@', '@F8@', '@F9@'];
         generated_id =[]
         log = [i for i in self.p.log if i[0] == 'US02']
         for record in log:
@@ -239,6 +239,32 @@ class TestUS(unittest.TestCase):
             generated_id = us33_list_orphans(q)
 
             self.assertEqual(expected_id, generated_id)
+
+
+    def test_US17(self):
+        expected_id = ['@F6@','@F6@','@F8@','@F9@']
+        p = P.Parser()
+        
+        generated_id = []
+        log = [i for i in self.p.log if i[0] == 'US17']
+        for record in log:
+            a = record[2]
+            generated_id.append(a[0])
+        self.assertEqual(expected_id, generated_id)
+
+    def test_US18(self):
+        expected_id = ['@F6@']
+        p = P.Parser()
+        
+        generated_id = []
+
+        log = [i for i in self.p.log if i[0] == 'US18']
+        for record in log:
+            a = record[2]
+            generated_id.append(a[0])
+        self.assertEqual(expected_id, generated_id)
+
+
 
 if __name__ == '__main__':
     unittest.main()
