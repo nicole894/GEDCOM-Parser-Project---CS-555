@@ -46,6 +46,14 @@ log_func={
 
     ("US13","SPAC"): lambda x: f"US13: FAM: {x[0]}: Kid#1 {x[1]} born on {x[2]} has not proper spacing with kid#2 {x[3]} born on {x[4]}.",
 
+
+    
+    ("US17","HUSB"): lambda x: f"US17: FAM: {x[0]}: Wife ({x[1]}) is married to her child ({x[2]})",
+    ("US17","WIFE"): lambda x: f"US17: FAM: {x[0]}: Husband ({x[1]}) is married to his child ({x[2]})",
+
+    ("US18","FAM"): lambda x: f"US18: FAM: {x[0]}: Siblings ({x[1]}) and ({x[2]}) are married to each other",
+
+
     ("US21","HUSB"): lambda x: f"US21: FAM: {x[0]}: Husband ({x[1]}) has incorrect gender",
     ("US21","WIFE"): lambda x: f"US21: FAM: {x[0]}: Wife ({x[1]}) has incorrect gender",
  
@@ -70,11 +78,11 @@ log_func={
     ("US15","FAM" ): lambda x: f"US15: FAM: {x[0]}: Family ({x[0]}) has more than 14 siblings {x[1]}",
     ("US31","MARR"): lambda x: f"INFO: US31: INDI: List all living people over 30 who have never been married\n {x[0]}",
     ("US23","INDI"): lambda x: f"US23: INDI: {x[0]}: Individual with same name and birthdate already exists",
-    ("US26","CHIL"): lambda x: f"US33: INDI: {x[0]}: Individual is a child in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
-    ("US26","PART"): lambda x: f"US33: INDI: {x[0]}: Individual is a spouse in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
-    ("US26","HUSB"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is the husband in family({x[0]}), but the does not exist in the Individual table",
-    ("US26","WIFE"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is the wife in family({x[0]}), but the does not exist in the Individual table",
-    ("US26","CHFA"): lambda x: f"US33: FAM: {x[0]}: ({x[1]}) is a child in family({x[0]}), but the does not exist in the Individual table",
+    ("US26","CHIL"): lambda x: f"US26: INDI: {x[0]}: Individual is a child in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
+    ("US26","PART"): lambda x: f"US26: INDI: {x[0]}: Individual is a spouse in family({x[0]}), but the record {x[1]} does not exists in Family Table.",
+    ("US26","HUSB"): lambda x: f"US26: FAM: {x[0]}: ({x[1]}) is the husband in family({x[0]}), but the record does not exist in the Individual table",
+    ("US26","WIFE"): lambda x: f"US26: FAM: {x[0]}: ({x[1]}) is the wife in family({x[0]}), but the record does not exist in the Individual table",
+    ("US26","CHFA"): lambda x: f"US26: FAM: {x[0]}: ({x[1]}) is a child in family({x[0]}), but the record does not exist in the Individual table",
     ("US33","INDI"): lambda x: f"INFO: US33: INDI: List all orphans. \n {x[0]}",
     }
 
