@@ -188,6 +188,36 @@ def us08_birth_when_parent_married(p):
                         if N(kbr, 9*md, div, False) is False:
                             p.log.append(['US08','BAPD',[id,Kf(div),kid,Kf(kbr)]])
 
+def us17_no_marriages_to_children(p):
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+        kids = v.get('CHIL',[])
+
+        if kids is not None:    
+            if hid in kids:
+                p.log.append(['US17','HUSB',[id, hid, wid]])
+
+            if wid in kids:
+                p.log.append(['US17','WIFE',[id, wid, hid]])
+
+def us18_sibilings_should_not_marry(p):
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+
+        if hid in p.indi:
+            husband_famc = p.indi[hid].get('FAMC')
+
+        if wid in p.indi:
+            wife_famc = p.indi[wid].get('FAMC')
+
+        if husband_famc and wife_famc:   
+            if husband_famc == wife_famc:
+                p.log.append(['US18','FAM',[id, hid, wid]])
+
+
+
 def us09_birth_before_parent_death(p):
     for id, v in p.fam.items():
         hid = p.fam[id]['HUSB']
@@ -474,6 +504,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us31_living_single(p)
     us26_corresponding_entries(p)
     us33_list_orphans(p)
+    us17_no_marriages_to_children(p)
+    us18_sibilings_should_not_marry(p)
     return p
 
 if __name__ == '__main__':
