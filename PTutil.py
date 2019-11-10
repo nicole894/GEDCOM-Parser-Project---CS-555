@@ -46,12 +46,15 @@ log_func={
 
     ("US13","SPAC"): lambda x: f"US13: FAM: {x[0]}: Kid#1 {x[1]} born on {x[2]} has not proper spacing with kid#2 {x[3]} born on {x[4]}.",
 
-
+    ("US16","LAST"): lambda x: f"US16: FAM: {x[0]}: The boy ({x[2]}) has a different lastname from his father ({x[1]}).",
     
     ("US17","HUSB"): lambda x: f"US17: FAM: {x[0]}: Wife ({x[1]}) is married to her child ({x[2]})",
     ("US17","WIFE"): lambda x: f"US17: FAM: {x[0]}: Husband ({x[1]}) is married to his child ({x[2]})",
 
     ("US18","FAM"): lambda x: f"US18: FAM: {x[0]}: Siblings ({x[1]}) and ({x[2]}) are married to each other",
+
+    ("US20","AUNT"): lambda x: f"US20: FAM: {x[0]}: The child ({x[1]}) has married its aunt ({x[2]}).",
+    ("US20","UNCL"): lambda x: f"US20: FAM: {x[0]}: The child ({x[1]}) has married its uncle ({x[2]}).",
 
 
     ("US21","HUSB"): lambda x: f"US21: FAM: {x[0]}: Husband ({x[1]}) has incorrect gender",

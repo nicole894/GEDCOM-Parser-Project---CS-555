@@ -475,6 +475,64 @@ def us33_list_orphans(p):
     p.log.append(['US33', 'INDI', x])
     return ids
 
+def us16_male_last_name(p):
+    def get_last(id):
+        return p.indi[id].get('NAME').split('/')[1]
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        last = p.indi.get(hid) and get_last(hid)
+        kids = v.get('CHIL',[])
+        for kid in kids:
+            if p.indi.get(kid) and p.indi[kid].get('SEX')=='M' and get_last(kid)!=last:
+                p.log.append(['US16','LAST',[id,hid,kid]])
+
+def us20_aunts_and_uncles(p):
+    """
+    One's siblings should not marry its children
+    """
+    couples=[(v.get('HUSB'),v.get('WIFE')) for v in p.fam.values()]
+    children=[v.get('CHIL') for v in p.fam.values() if v.get('CHIL')]
+    def index(a, x):
+        try:
+            return a.index(x)
+        except ValueError:
+            return -1
+    def get_couples(id):
+        x = set()
+        for a in couples:
+            if index(a, id) is 0:
+                x.add(a[1])
+            elif index(a, id) is 1:
+                x.add(a[0])
+        return x
+    def get_siblings(id):
+        x = []
+        for i in children:
+            if id in i:
+                x = i.copy()
+                x.remove(id)
+                return x
+        return x
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+        hsb = get_siblings(hid)
+        wsb = get_siblings(wid)
+        kids = v.get('CHIL',[])
+        for h in hsb:
+            j = get_couples(h).intersection(kids)
+            for i in j:
+                if p.indi[h].get('SEX')=='M':
+                    p.log.append(['US20','UNCL',[id, h, i]])
+                elif p.indi[h].get('SEX')=='F': 
+                    p.log.append(['US20','AUNT',[id, h, i]])
+        for w in wsb:
+            j = get_couples(w).intersection(kids)
+            for i in j:
+                if p.indi[w].get('SEX')=='M':
+                    p.log.append(['US20','UNCL',[id, w, i]])
+                elif p.indi[w].get('SEX')=='F': 
+                    p.log.append(['US20','AUNT',[id, w, i]])
 
 
 def main(path = "GEDCOM_File_withErrors.ged"):
@@ -506,6 +564,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us33_list_orphans(p)
     us17_no_marriages_to_children(p)
     us18_sibilings_should_not_marry(p)
+    us16_male_last_name(p)
+    us20_aunts_and_uncles(p)
     return p
 
 if __name__ == '__main__':

@@ -264,6 +264,21 @@ class TestUS(unittest.TestCase):
             generated_id.append(a[0])
         self.assertEqual(expected_id, generated_id)
 
+    def test_US16(self):
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US16']
+            self.assertIn(['US16', 'LAST', ['@F7@', '@I16@', '@I8@']], logs)
+        
+        else:
+            self.run_test('US16')
+    def test_US20(self):
+        if self._path == 'GEDCOM_File_withErrors.ged':
+            logs = [i for i in self.p.log if i[0]=='US20']
+            self.assertIn(['US20', 'AUNT', ['@F6@', '@I12@', '@I13@']], logs)
+            self.assertIn(['US20', 'UNCL', ['@F6@', '@I13@', '@I12@']], logs)
+        
+        else:
+            self.run_test('US20')
 
 
 if __name__ == '__main__':
