@@ -1,14 +1,14 @@
 import unittest
 from prettytable import PrettyTable
 import GDriver as D
-from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single, us33_list_orphans, us17_no_marriages_to_children, us18_sibilings_should_not_marry
+from GDriver import us38_list_upcoming_birthdays, us39_list_upcoming_anniversary, us35_birth_inlast_30days, us36_death_inlast_30days, us29_list_of_deceased, us30_list_all_living_married_people, us31_living_single, us33_list_orphans, us17_no_marriages_to_children, us18_sibilings_should_not_marry,us32_list_multiple_births,us34_larger_age_difference
 import GParser as P
 D.today = '15 OCT 2019'
 
 class TestUS(unittest.TestCase):
     __ALL__ = ["US01", "US02", "US03", "US21", "US22", "US35", "US36", "US42", "US04", "US05", "US07", "US08", "US09",
-               "US10","US17","US18", "US38", "US39","US29","US30","US31","US23"]
-    __INFO__ = ["US35", "US36", "US38", "US39","US29","US30","US31","US23"]
+               "US10","US17","US18", "US38", "US39","US29","US30","US31","US23","US32","US34"]
+    __INFO__ = ["US35", "US36", "US38", "US39","US29","US30","US31","US23","US32","US34"]
     _path = 'GEDCOM_File_withErrors.ged'
     p = D.main(_path)
 
@@ -271,6 +271,7 @@ class TestUS(unittest.TestCase):
         
         else:
             self.run_test('US16')
+    
     def test_US20(self):
         if self._path == 'GEDCOM_File_withErrors.ged':
             logs = [i for i in self.p.log if i[0]=='US20']
@@ -279,6 +280,22 @@ class TestUS(unittest.TestCase):
         
         else:
             self.run_test('US20')
+    
+    def test_US32(self):
+        
+        expected_id = ['@I42@','@I43@','@I44@','@I48@']
+        q = P.Parser()
+        generated_id = us32_list_multiple_births(q)
+
+        self.assertEqual(expected_id, generated_id)
+    
+    def test_US34(self):
+        
+        expected_id = ['@F1@','@F2@','@F3@','@F8@']
+        q = P.Parser()
+        generated_id = us34_larger_age_difference(q)
+
+        self.assertEqual(expected_id, generated_id)
 
 
 if __name__ == '__main__':
