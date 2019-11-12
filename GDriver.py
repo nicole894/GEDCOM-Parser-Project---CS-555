@@ -45,10 +45,12 @@ def us21_correct_gender(p):
     for id, v in p.fam.items():
         hid = p.fam[id]['HUSB']
         wid = p.fam[id]['WIFE']
-        if p.indi[hid]['SEX']!='M':
-            p.log.append(["US21","HUSB",[id,hid]])
-        if p.indi[wid]['SEX']!='F':
-            p.log.append(["US21","WIFE",[id,wid]])
+        if hid in p.indi:
+            if p.indi[hid]['SEX']!='M':
+                p.log.append(["US21","HUSB",[id,hid]])
+        if wid in p.indi:
+            if p.indi[wid]['SEX']!='F':
+                p.log.append(["US21","WIFE",[id,wid]])
 
 def us03_birth_before_death(p):
     for id, v in p.indi.items():
@@ -87,24 +89,28 @@ def us02_birth_before_marriage(p):
         else:
             K_mar=Kf(mar)
             hid=v.get('HUSB')
-            hbir=p.indi[hid].get('BIRT')
+            if hid in p.indi:
+                hbir=p.indi[hid].get('BIRT')
             wid=v.get('WIFE')
-            wbir=p.indi[wid].get('BIRT')
+            if wid in p.indi:
+                wbir=p.indi[wid].get('BIRT')
+
             if hbir is None:
-                p.log.append(['US02','H_NA',[id]])
+                    p.log.append(['US02','H_NA',[id]])
             elif C(hbir, mar) is False:
-                p.log.append(['US02','HUSB',[id,hid,Kf(hbir),K_mar]])
+                    p.log.append(['US02','HUSB',[id,hid,Kf(hbir),K_mar]])
+
             if wbir is None:
-                p.log.append(['US02','W_NA',[id]])
+                    p.log.append(['US02','W_NA',[id]])
             elif C(wbir, mar) is False:
-                p.log.append(['US02','WIFE',[id,wid,Kf(wbir),K_mar]])
+                    p.log.append(['US02','WIFE',[id,wid,Kf(wbir),K_mar]])
 
 def us35_birth_inlast_30days(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
     id3 = []
     #todays_date = (todays_date == 'today') and datetime.today() or convert_str_date(todays_date)
     #todays_date = todays_date.date()
-
+    #print(todays_date)
     for id, v in p.indi.items():
         birth = v.get('BIRT')
         name = v.get('NAME')
@@ -145,9 +151,11 @@ def us05_marriage_before_death(p):
         if mar is not None:
             K_mar=Kf(mar)
             hid=v.get('HUSB')
-            hdea=p.indi[hid].get('DEAT')
+            if hid in p.indi:
+                hdea=p.indi[hid].get('DEAT')
             wid=v.get('WIFE')
-            wdea=p.indi[wid].get('DEAT')
+            if wid in p.indi:
+                wdea=p.indi[wid].get('DEAT')
             if hdea is not None and C(mar, hdea) is False:
                 p.log.append(['US05','HUSB',[id,K_mar,hid,Kf(hdea)]])
             if wdea is not None and C(mar, wdea) is False:
@@ -172,27 +180,61 @@ def us08_birth_when_parent_married(p):
             div = v.get('DIV')
             kids = v.get('CHIL',[])
             for kid in kids:
-                kbr = p.indi[kid].get('BIRT')
-                if kbr is not None:
-                    if C(kbr,mar):
-                        p.log.append(['US08','BBPM',[id,Kf(mar),kid,Kf(kbr)]])
-                    if N(kbr, 9*md, div, False) is False:
-                        p.log.append(['US08','BAPD',[id,Kf(div),kid,Kf(kbr)]])
+                if kid in p.indi:
+                    kbr = p.indi[kid].get('BIRT')
+                    if kbr is not None:
+                        if C(kbr,mar):
+                            p.log.append(['US08','BBPM',[id,Kf(mar),kid,Kf(kbr)]])
+                        if N(kbr, 9*md, div, False) is False:
+                            p.log.append(['US08','BAPD',[id,Kf(div),kid,Kf(kbr)]])
+
+def us17_no_marriages_to_children(p):
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+        kids = v.get('CHIL',[])
+
+        if kids is not None:    
+            if hid in kids:
+                p.log.append(['US17','HUSB',[id, hid, wid]])
+
+            if wid in kids:
+                p.log.append(['US17','WIFE',[id, wid, hid]])
+
+def us18_sibilings_should_not_marry(p):
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+
+        if hid in p.indi:
+            husband_famc = p.indi[hid].get('FAMC')
+
+        if wid in p.indi:
+            wife_famc = p.indi[wid].get('FAMC')
+
+        if husband_famc and wife_famc:   
+            if husband_famc == wife_famc:
+                p.log.append(['US18','FAM',[id, hid, wid]])
+
+
 
 def us09_birth_before_parent_death(p):
     for id, v in p.fam.items():
         hid = p.fam[id]['HUSB']
-        hdea=p.indi[hid].get('DEAT')
+        if hid in p.indi:
+            hdea=p.indi[hid].get('DEAT')
         wid=v.get('WIFE')
-        wdea=p.indi[wid].get('DEAT')
+        if wid in p.indi:
+            wdea=p.indi[wid].get('DEAT')
         kids = v.get('CHIL',[])
         for kid in kids:
-            kbr = p.indi[kid].get('BIRT')
-            if kbr is not None:
-                if C(wdea, kbr):
-                    p.log.append(['US09','WIFE',[id,wid,Kf(wdea),kid,kbr]])
-                if N(kbr, 9*md, hdea, False) is False:
-                    p.log.append(['US09','HUSB',[id,hid,Kf(hdea),kid,kbr]])
+            if kid in p.indi:
+                kbr = p.indi[kid].get('BIRT')
+                if kbr is not None:
+                    if C(wdea, kbr):
+                        p.log.append(['US09','WIFE',[id,wid,Kf(wdea),kid,kbr]])
+                    if N(kbr, 9*md, hdea, False) is False:
+                        p.log.append(['US09','HUSB',[id,hid,Kf(hdea),kid,kbr]])
 
 def us10_marriage_after_14(p):
     for id, v in p.fam.items():
@@ -200,9 +242,11 @@ def us10_marriage_after_14(p):
         if mar is not None:
             K_mar=Kf(mar)
             hid=v.get('HUSB')
-            hbir=p.indi[hid].get('BIRT')
+            if hid in p.indi:
+                hbir=p.indi[hid].get('BIRT')
             wid=v.get('WIFE')
-            wbir=p.indi[wid].get('BIRT')
+            if wid in p.indi:
+                wbir=p.indi[wid].get('BIRT')
             if N(mar, 14*yd, hbir):
                 p.log.append(['US10','HUSB',[id,K_mar,hid,Kf(hbir)]])
             if N(mar, 14*yd, wbir):
@@ -211,17 +255,20 @@ def us10_marriage_after_14(p):
 def us12_parent_not_too_old(p):
     for id, v in p.fam.items():
         hid = p.fam[id]['HUSB']
-        hbir=p.indi[hid].get('BIRT')
+        if hid in p.indi:
+            hbir=p.indi[hid].get('BIRT')
         wid=v.get('WIFE')
-        wbir=p.indi[wid].get('BIRT')
+        if wid in p.indi:
+            wbir=p.indi[wid].get('BIRT')
         kids = v.get('CHIL',[])
         for kid in kids:
-            kbr = p.indi[kid].get('BIRT')
-            if kbr is not None:
-                if N(kbr, 60*yd, wbir, False) is False:
-                    p.log.append(['US12','WIFE',[id,wid,Kf(wbir),kid,Kf(kbr)]])
-                if N(kbr, 80*yd, hbir, False) is False:
-                    p.log.append(['US12','HUSB',[id,hid,Kf(hbir),kid,Kf(kbr)]])
+            if kid in p.indi:
+                kbr = p.indi[kid].get('BIRT')
+                if kbr is not None:
+                    if N(kbr, 60*yd, wbir, False) is False:
+                        p.log.append(['US12','WIFE',[id,wid,Kf(wbir),kid,Kf(kbr)]])
+                    if N(kbr, 80*yd, hbir, False) is False:
+                        p.log.append(['US12','HUSB',[id,hid,Kf(hbir),kid,Kf(kbr)]])
 
 def us13_sibling_spacing(p):
     def spacing(date1,date2):
@@ -232,11 +279,18 @@ def us13_sibling_spacing(p):
         return N(date1,8*md,date2) and not N(date1,1,date2)
     for id, v in p.fam.items():
         kids = v.get('CHIL',[])
-        kbrs = [p.indi[i].get('BIRT') for i in kids]
-        for i in range(len(kids)-1):
-            for j in range(i+1, len(kids)):
-                if spacing(kbrs[i],kbrs[j]):
-                    p.log.append(['US13', 'SPAC',[id,kids[i],Kf(kbrs[i]),kids[j],Kf(kbrs[j])]])                
+        #print(kids)
+        #kbrs = [p.indi[i].get('BIRT') if i in p.indi for i in kids]
+        kbrs = []
+        for i in kids:
+            if i in p.indi:
+                kbrs.append(p.indi[i].get('BIRT'))
+        #print(kbrs)
+        a = len(kbrs)
+        for i in range(a-1):
+            for j in range(i+1, a):
+                if spacing(kbrs[i], kbrs[j]):
+                    p.log.append(['US13', 'SPAC', [id, kids[i], Kf(kbrs[i]), kids[j], Kf(kbrs[j])]])
                 
 def us38_list_upcoming_birthdays(p, todays_date):
     x = PrettyTable(["ID","Name","Birthday"])
@@ -266,9 +320,11 @@ def us39_list_upcoming_anniversary(p, todays_date):
     for id, v in p.fam.items():
         marriage = v.get('MARR')
         hid = v.get('HUSB')
-        hname = p.indi[hid].get('NAME')
+        if hid in p.indi:
+            hname = p.indi[hid].get('NAME')
         wid = v.get('WIFE')
-        wname = p.indi[wid].get('NAME')
+        if wid in p.indi:
+            wname = p.indi[wid].get('NAME')
         if marriage is not None:
             anniversary_date =K(marriage).date()
             # todays_date=datetime.today().date()
@@ -310,7 +366,7 @@ def us29_list_of_deceased(p):
         death = v.get('DEAT')
         name = v.get('NAME')
         if death is not None:            
-            x.add_row([id,name,death])
+            x.add_row([id,name,convert_str_date(death).date()])
             id29.append(id)
     p.log.append(['US29','DEAT',[x]])
     return id29
@@ -362,7 +418,164 @@ def us31_living_single(p):
     p.log.append(['US31','MARR',[x]])
     return id5
 
+def us26_corresponding_entries(p):
 
+    for id, v in p.indi.items():
+        child_family = v.get('FAMC')
+        parent_family = v.get('FAMS')
+        #print(child_family , parent_family)
+        if child_family:
+            if child_family not in p.fam:
+                p.log.append(['US26', 'CHIL', [id, child_family]])
+        if parent_family:
+            for record in parent_family:
+                if record not in p.fam:
+                    p.log.append(['US26', 'PART', [id, record]])
+
+    for id, v in p.fam.items():
+        children_id = v.get('CHIL')
+        husband_id = v.get('HUSB')
+        wife_id = v.get('WIFE')
+
+        if husband_id not in p.indi:
+            p.log.append(['US26', 'HUSB', [id, husband_id]])
+
+        if wife_id not in p.indi:
+            p.log.append(['US26', 'WIFE', [id, wife_id]])
+
+        if children_id:
+            for record in children_id:
+                if not p.indi.get(record):
+                    p.log.append(['US26', 'CHFA', [id, record]])
+
+def us33_list_orphans(p):
+    x = PrettyTable(["ID", "Name", "Age"])
+    ids=[]
+    for id, v in p.fam.items():
+        children_id = v.get('CHIL')
+        husband_id = v.get('HUSB')
+        wife_id = v.get('WIFE')
+
+        if husband_id in p.indi:
+            husband_death = p.indi[husband_id].get('DEAT')
+
+        if wife_id in p.indi:
+            wife_death = p.indi[wife_id].get('DEAT')
+        if children_id:
+            if husband_death and wife_death:
+                for record in children_id:
+                    if record in p.indi:
+                        child_age = p.indi[record].get('BIRT')
+                        age = int((datetime.now() - convert_str_date(child_age)).days/yd)
+                        if age < 18:
+                            ids.append(record)
+                            x.add_row([record, p.indi[record].get('NAME'), age])
+                            #p.log.append(['US33', 'INDI', [id, record]])
+
+    p.log.append(['US33', 'INDI', x])
+    return ids
+
+def us16_male_last_name(p):
+    def get_last(id):
+        return p.indi[id].get('NAME').split('/')[1]
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        last = p.indi.get(hid) and get_last(hid)
+        kids = v.get('CHIL',[])
+        for kid in kids:
+            if p.indi.get(kid) and p.indi[kid].get('SEX')=='M' and get_last(kid)!=last:
+                p.log.append(['US16','LAST',[id,hid,kid]])
+
+def us20_aunts_and_uncles(p):
+    """
+    One's siblings should not marry its children
+    """
+    couples=[(v.get('HUSB'),v.get('WIFE')) for v in p.fam.values()]
+    children=[v.get('CHIL') for v in p.fam.values() if v.get('CHIL')]
+    def index(a, x):
+        try:
+            return a.index(x)
+        except ValueError:
+            return -1
+    def get_couples(id):
+        x = set()
+        for a in couples:
+            if index(a, id) is 0:
+                x.add(a[1])
+            elif index(a, id) is 1:
+                x.add(a[0])
+        return x
+    def get_siblings(id):
+        x = []
+        for i in children:
+            if id in i:
+                x = i.copy()
+                x.remove(id)
+                return x
+        return x
+    for id, v in p.fam.items():
+        hid = v.get('HUSB')
+        wid = v.get('WIFE')
+        hsb = get_siblings(hid)
+        wsb = get_siblings(wid)
+        kids = v.get('CHIL',[])
+        for h in hsb:
+            j = get_couples(h).intersection(kids)
+            for i in j:
+                if p.indi[h].get('SEX')=='M':
+                    p.log.append(['US20','UNCL',[id, h, i]])
+                elif p.indi[h].get('SEX')=='F': 
+                    p.log.append(['US20','AUNT',[id, h, i]])
+        for w in wsb:
+            j = get_couples(w).intersection(kids)
+            for i in j:
+                if p.indi[w].get('SEX')=='M':
+                    p.log.append(['US20','UNCL',[id, w, i]])
+                elif p.indi[w].get('SEX')=='F': 
+                    p.log.append(['US20','AUNT',[id, w, i]])
+
+def us32_list_multiple_births(p):
+    """List all multiple births in GEDCOM file"""
+    x = PrettyTable(["ID","Name","Birthday"])
+    id32 = []
+
+    for id, v in p.indi.items():
+        
+        name = v.get('NAME')
+        births = v.get('BIRT')
+    
+        for id1, v1 in p.indi.items():
+            if(id!=id1):
+                if(p.indi[id].get('BIRT') == p.indi[id1].get('BIRT')):
+                    x.add_row([id,name,births])
+                    id32.append(id)
+    p.log.append(['US32', 'BIRT', [x]])
+    return id32
+
+def us34_larger_age_difference(p):
+    """List all couples who were married when the older spouse was more than twice as old as the younger spouse"""
+    x = PrettyTable(["ID","Husband","Hage","Wife","Wage"])
+    id34 = []
+
+    for id, v in p.fam.items():
+        husband_id = v.get('HUSB')
+        wife_id = v.get('WIFE')
+
+        if husband_id in p.indi:
+            hname = p.indi[husband_id].get('NAME')
+            husband_birth = p.indi[husband_id].get('BIRT')
+            hus_age = int((datetime.now() - convert_str_date(husband_birth)).days/yd)
+
+        if wife_id in p.indi:
+            wname = p.indi[wife_id].get('NAME')
+            wife_birth = p.indi[wife_id].get('BIRT')
+            wife_age = int((datetime.now() - convert_str_date(wife_birth)).days/yd)
+
+            if(hus_age > 2*wife_age or wife_age > 2*hus_age):
+                x.add_row([id,hname,hus_age,wname,wife_age])
+                id34.append(id)
+    p.log.append(['US34', 'BIRT', [x]])
+    return id34
 
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
@@ -389,6 +602,14 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us30_list_all_living_married_people(p)
     us23_UniqueName_and_BirthDate(p)
     us31_living_single(p)
+    us26_corresponding_entries(p)
+    us33_list_orphans(p)
+    us17_no_marriages_to_children(p)
+    us18_sibilings_should_not_marry(p)
+    us16_male_last_name(p)
+    us20_aunts_and_uncles(p)
+    us32_list_multiple_births(p)
+    us34_larger_age_difference(p)
     return p
 
 if __name__ == '__main__':
