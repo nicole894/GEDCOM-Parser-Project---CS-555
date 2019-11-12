@@ -534,6 +534,48 @@ def us20_aunts_and_uncles(p):
                 elif p.indi[w].get('SEX')=='F': 
                     p.log.append(['US20','AUNT',[id, w, i]])
 
+def us32_list_multiple_births(p):
+    """List all multiple births in GEDCOM file"""
+    x = PrettyTable(["ID","Name","Birthday"])
+    id32 = []
+
+    for id, v in p.indi.items():
+        
+        name = v.get('NAME')
+        births = v.get('BIRT')
+    
+        for id1, v1 in p.indi.items():
+            if(id!=id1):
+                if(p.indi[id].get('BIRT') == p.indi[id1].get('BIRT')):
+                    x.add_row([id,name,births])
+                    id32.append(id)
+    p.log.append(['US32', 'BIRT', [x]])
+    return id32
+
+def us34_larger_age_difference(p):
+    """List all couples who were married when the older spouse was more than twice as old as the younger spouse"""
+    x = PrettyTable(["ID","Husband","Hage","Wife","Wage"])
+    id34 = []
+
+    for id, v in p.fam.items():
+        husband_id = v.get('HUSB')
+        wife_id = v.get('WIFE')
+
+        if husband_id in p.indi:
+            hname = p.indi[husband_id].get('NAME')
+            husband_birth = p.indi[husband_id].get('BIRT')
+            hus_age = int((datetime.now() - convert_str_date(husband_birth)).days/yd)
+
+        if wife_id in p.indi:
+            wname = p.indi[wife_id].get('NAME')
+            wife_birth = p.indi[wife_id].get('BIRT')
+            wife_age = int((datetime.now() - convert_str_date(wife_birth)).days/yd)
+
+            if(hus_age > 2*wife_age or wife_age > 2*hus_age):
+                x.add_row([id,hname,hus_age,wname,wife_age])
+                id34.append(id)
+    p.log.append(['US34', 'BIRT', [x]])
+    return id34
 
 def main(path = "GEDCOM_File_withErrors.ged"):
     p=P.Parser()
@@ -566,6 +608,8 @@ def main(path = "GEDCOM_File_withErrors.ged"):
     us18_sibilings_should_not_marry(p)
     us16_male_last_name(p)
     us20_aunts_and_uncles(p)
+    us32_list_multiple_births(p)
+    us34_larger_age_difference(p)
     return p
 
 if __name__ == '__main__':
