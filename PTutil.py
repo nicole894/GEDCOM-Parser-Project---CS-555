@@ -6,7 +6,7 @@ api_version=204
 
 today = time.strftime("%Y %m %d").split(' ')
 month=['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
-log_level=["US35", "US36", "US38", "US39","US29","US30","US31","US33"]
+log_level=["US35", "US36", "US38", "US39","US29","US30","US31","US33","US32","US34"]
 log_func={
     ("US01","B_NA"): lambda x: f"US01: INDI: {x[0]}: Birth Date is not known",
     ("US01","BIRT"): lambda x: f"US01: INDI: {x[0]}: Birth Date {x[1]} is after today's date",
@@ -87,6 +87,8 @@ log_func={
     ("US26","WIFE"): lambda x: f"US26: FAM: {x[0]}: ({x[1]}) is the wife in family({x[0]}), but the record does not exist in the Individual table",
     ("US26","CHFA"): lambda x: f"US26: FAM: {x[0]}: ({x[1]}) is a child in family({x[0]}), but the record does not exist in the Individual table",
     ("US33","INDI"): lambda x: f"INFO: US33: INDI: List all orphans. \n {x[0]}",
+    ("US32","BIRT"): lambda x: f"INFO: US32: INDI: List all multiple births. \n {x[0]}",
+    ("US34","BIRT"): lambda x: f"INFO: US34: INDI: List all spouses whose age is twice as old as younger spouse. \n {x[0]}"
     }
 
 def date_format(date_list):
